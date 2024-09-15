@@ -1,6 +1,18 @@
 package ru.stqa.geometry.figures;
 
+import static java.lang.Math.PI;
+import static java.lang.Math.sqrt;
+
 public class Triangle {
+           public static void printTriangleArea(double a, double b, double c)
+        {
+            var text = String.format("Площадь треугольника со сторонами %f и %f и %f = %f",a,b,c, triangleArea(a,b,c));
+            System.out.println(text);
+        }
+
+        private static Double triangleArea(double a, double b, double c) {
+            return sqrt (PI*(PI - a)*(PI - b)*(PI - c));
+        }
 }
 
 /*Функция для вычисления квадратного корня
@@ -14,10 +26,10 @@ If the argument is positive zero or negative zero, then the result is the same a
         Parameters:
 a - a value.
 Returns:
-the positive square root of a. If the argument is NaN or less than zero, the result is NaN.
+the positive square root of a. If the argument is NaN or less than zero, the result is NaN.*/
 
 /*константа пи  для использования пишем: math.PI
 static double	PI
-The double value that is closer than any other to pi, the ratio of the circumference of a circle to its diameter.
+The double value that is closer than any other to pi, the ratio of the circumference of a circle to its diameter.*/
 
-/*S = √p(p - a)(p - b)(p - c)
+/* S = √p(p - a)(p - b)(p - c) */
