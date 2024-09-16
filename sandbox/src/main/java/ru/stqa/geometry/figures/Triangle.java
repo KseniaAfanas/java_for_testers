@@ -10,7 +10,8 @@ public class Triangle {
         }
 
     private static Double triangleArea(double a, double b, double c) {
-            double sqrt1 = sqrt((a+b+c)/2 * ((a+b+c)/2 - a) * ((a+b+c)/2 - b) * ((a+b+c)/2 - c));
+               double p= (a+b+c)/2;
+            double sqrt1 = sqrt(p * (p - a) * (p - b) * (p - c));
             return sqrt1;
         }
 }
