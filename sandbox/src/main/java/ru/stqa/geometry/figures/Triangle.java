@@ -9,7 +9,7 @@ public class Triangle {
             System.out.println(text);
         }
 
-    private static Double triangleArea(double a, double b, double c) {
+    public static Double triangleArea(double a, double b, double c) {
                double p= (a+b+c)/2;
             double sqrt1 = sqrt(p * (p - a) * (p - b) * (p - c));
             return sqrt1;
