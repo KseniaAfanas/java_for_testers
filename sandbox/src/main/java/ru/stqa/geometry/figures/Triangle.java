@@ -3,19 +3,35 @@ package ru.stqa.geometry.figures;
 import static java.lang.Math.sqrt;
 
 public class Triangle {
-           public static void printTriangleArea(double a, double b, double c)
-        {
-            var text = String.format("Площадь треугольника со сторонами %f и %f и %f = %f",a,b,c,triangleArea(a, b, c));
-            System.out.println(text);
-        }
+    double a;
+    double b;
+    double c;
 
-    public static Double triangleArea(double a, double b, double c) {
-               double p= (a+b+c)/2;
-            double sqrt1 = sqrt(p * (p - a) * (p - b) * (p - c));
-            return sqrt1;
-        }
+    public Triangle(double a, double b, double c) {
+        this.a = a;
+        this.b = b;
+        this.c = c;
+    }
+
+    public void printTriangleArea() {
+        var text = String.format("Площадь треугольника со сторонами %f и %f и %f = %f", a, b, c, triangleArea());
+        System.out.println(text);
+    }
+
+    public Double triangleArea() {
+        double p = (a + b + c) / 2;
+        double sqrt1 = sqrt(p * (p - a) * (p - b) * (p - c));
+        return sqrt1;
+    }
+
+    public double perimeter() {
+        return a + b + c;
+    }
+    public void printTriangleperimeter() {
+        var text = String.format("Периметр треугольника со сторонами %f и %f и %f = %f", a, b, c, perimeter());
+        System.out.println(text);
+    }
 }
-
 /*Функция для вычисления квадратного корня
 public static double sqrt(double a)
 Returns the correctly rounded positive square root of a double value. Special cases:
