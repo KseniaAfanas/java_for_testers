@@ -1,8 +1,24 @@
 public class Hello {
     public static void main(String[] args) {
-        System.out.println("Hello, KSUSHA");
-        System.out.println(2/2);
-        System.out.println("Hello"+"ks");
-        System.out.println("2+2=" +(2+2));
+        try {
+            int z = calculete();
+            System.out.println(z);
+            System.out.println("Hello, KSUSHA");
+        }
+        catch (ArithmeticException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    private static int calculete() {
+        var x=1;
+        var y=1;
+        int z = divide(x, y);
+        return z;
+    }
+
+    private static int divide(int x, int y) {
+        var z= x / y;
+        return z;
     }
 }
