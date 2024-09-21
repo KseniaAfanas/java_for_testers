@@ -33,6 +33,18 @@ void canCalculatePerimeter() {
         }
 
     }
+    @Test
+    void testEquality (){
+        var t1 = new Triangle(10.0,14.0, 15.0);
+        var t2 = new Triangle(10.0,14.0, 15.0);
+        Assertions.assertEquals(t1,t2);
+    }
+    @Test
+    void testEquality2 (){
+        var t1 = new Triangle(10.0,14.0, 15.0);
+        var t2 = new Triangle(14.0,15.0, 10.0);
+        Assertions.assertEquals(t1,t2);
+    }
 
 }
 
