@@ -41,8 +41,8 @@ void canCalculatePerimeter() {
     }
     @Test
     void testEquality2 (){
-        var t1 = new Triangle(10.0,14.0, 15.0);
-        var t2 = new Triangle(14.0,15.0, 10.0);
+        var t1 = new Triangle(3.0,4.0, 3.0);
+        var t2 = new Triangle(4.0,3.0, 5.0);
         Assertions.assertEquals(t1,t2);
     }
 
