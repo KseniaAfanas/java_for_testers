@@ -36,8 +36,37 @@ public class GroupHelper {
 
     public void removeGroup() {
         openGroupsPage();
-        manager.driver.findElement(By.name("selected[]")).click();
-        manager.driver.findElement(By.name("delete")).click();
+        selectGroup();
+                manager.driver.findElement(By.name("delete")).click();
         manager.driver.findElement(By.linkText("group page")).click();
+    }
+
+    public void modifyGroup(GroupData modifiedGroup) {
+        openGroupsPage();
+        selectGroup();
+        initGroupModification();
+        fillGroupForm(modifiedGroup);
+        submitGroupModification();
+        returnToGroupsPage();
+    }
+
+    private void returnToGroupsPage() {
+    }
+
+    private void submitGroupModification() {
+        
+    }
+
+    private void fillGroupForm(GroupData modifiedGroup) {
+        
+    }
+
+    private void initGroupModification() {
+        manager.driver.findElement(By.name("edit")).click();
+        
+    }
+
+    private void selectGroup() {
+        manager.driver.findElement(By.name("selected[]")).click();
     }
 }
