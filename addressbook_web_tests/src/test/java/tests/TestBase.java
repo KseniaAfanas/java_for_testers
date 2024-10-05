@@ -3,7 +3,7 @@ package tests;
 import manager.ApplicationManager;
 import org.junit.jupiter.api.BeforeEach;
 
-public class TestBase {
+public class TestBase {//базовый класс для тестов
     protected static ApplicationManager app;
 
     @BeforeEach
