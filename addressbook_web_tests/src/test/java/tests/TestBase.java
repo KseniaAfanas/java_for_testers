@@ -10,7 +10,7 @@ public class TestBase {//базовый класс для тестов
     public void setUp() {
         if (app==null) {
             app = new ApplicationManager();
-            app.init(System.getProperty("browser","chrome"));
+            app.init(System.getProperty("browser","chrome"));//firefox
         }
 
     }

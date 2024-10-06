@@ -1,4 +1,4 @@
-package model;
+/*package model;
 
 public record ContactData(String firstname, String middlename, String lastname, String nickname, String mobile,String email) {
     public ContactData() {
@@ -24,4 +24,4 @@ public record ContactData(String firstname, String middlename, String lastname, 
         return new GroupData(this.firstname, this.middlename, this.lastname, this.nickname, this.mobile, email);
     }
 
-}
+}*/

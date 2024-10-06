@@ -14,14 +14,14 @@ public class ApplicationManager {
 
     public void init(String browser) {
         if (driver == null) {
-            if ("chrome".equals(browser)){
+           if ("chrome".equals(browser)){
                 driver = new ChromeDriver();
             } else if ("firefox".equals(browser)) {
                 driver = new FirefoxDriver();
             } else {
                 throw new IllegalArgumentException(String.format("Unknown browser %s",browser));
             }
-                        Runtime.getRuntime().addShutdownHook(new Thread(driver::quit));
+                        Runtime.getRuntime().addShutdownHook(new Thread(driver::quit));//завершение джава в самом конце
             driver.get("http://localhost/addressbook/");
             driver.manage().window().setSize(new Dimension(1920, 1040));
             driver.findElement(By.name("user")).click();
