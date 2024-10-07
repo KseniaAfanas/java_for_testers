@@ -1,3 +1,4 @@
+import manager.ApplicationManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -27,10 +28,30 @@ public class ContactRemovalTests {
         if (!isElementPresent(By.xpath("(//input[@name=\'Delete\'])"))) {
             driver.findElement(By.linkText("home")).click();
         }
-        driver.findElement(By.name("selected[]")).click();// исправлен селектор
+        try {
+            driver.findElement(By.name("selected[]"));
+        } catch (NoSuchElementException e) {
+            driver.findElement(By.linkText("add new")).click();
+            driver.findElement(By.name("firstname")).click();
+            driver.findElement(By.name("firstname")).sendKeys("firstname1");
+            driver.findElement(By.name("middlename")).click();
+            driver.findElement(By.name("middlename")).sendKeys("middlename1");
+            driver.findElement(By.name("lastname")).click();
+            driver.findElement(By.name("lastname")).sendKeys("lastname1");
+            driver.findElement(By.name("nickname")).click();
+            driver.findElement(By.name("nickname")).sendKeys("nickname1");
+            driver.findElement(By.name("mobile")).click();
+            driver.findElement(By.name("mobile")).sendKeys("+79232501606");
+            driver.findElement(By.name("email")).click();
+            driver.findElement(By.name("email")).sendKeys("afa@gmail.com");
+            driver.findElement(By.xpath("(//input[@name=\'submit\'])")).click();//driver.findElement(By.xpath("(//input[@name=\'submit\'])[2]")).click();
+            driver.findElement(By.linkText("home page")).click();
+        }
+        driver.findElement(By.name("selected[]")).click();// выбор контакта
         driver.findElement(By.xpath("//input[@value=\'Delete\']")).click();
         driver.findElement(By.linkText("home")).click();
         driver.findElement(By.linkText("Logout")).click();
+
     }
     private boolean isElementPresent(By locator) {
         try {
