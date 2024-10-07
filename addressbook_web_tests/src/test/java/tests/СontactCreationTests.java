@@ -23,13 +23,12 @@ public class СontactCreationTests {
         }
     }
 
-    }
 
     @Test
     public void canCreateContact() {
-    if (! isElementPresent(By.xpath("(//input[@name=\'submit\'])"))){
-        driver.findElement(By.linkText("add new")).click();
-    }
+        if (!isElementPresent(By.xpath("(//input[@name=\'submit\'])"))) {
+            driver.findElement(By.linkText("add new")).click();
+        }
         driver.findElement(By.linkText("add new")).click();
         driver.findElement(By.name("firstname")).click();
         driver.findElement(By.name("firstname")).sendKeys("firstname1");
@@ -45,14 +44,14 @@ public class СontactCreationTests {
         driver.findElement(By.name("email")).sendKeys("afa@gmail.com");
         driver.findElement(By.xpath("(//input[@name=\'submit\'])")).click();//driver.findElement(By.xpath("(//input[@name=\'submit\'])[2]")).click();
         driver.findElement(By.linkText("home page")).click();
+    }
+
+    private boolean isElementPresent(By locator) {
+        try {
+            driver.findElement(locator);
+            return true;
+        } catch (NoSuchElementException exception) {
+            return false;
         }
-
-private boolean isElementPresent(By locator) {
-  try{
-      driver.findElemant(locator);
-      return true;
-  }  catch (NoSuchElementException exception){
-return false;
-  }
+    }
 }
-
