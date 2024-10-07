@@ -1,10 +1,8 @@
-package ru.stqa.geometry;
+package ru.stqa.collections.geometry;
 
-import ru.stqa.geometry.figures.Rectangle;
-import ru.stqa.geometry.figures.Square;
-import ru.stqa.geometry.figures.Triangle;
-
-import static java.lang.Math.PI;
+import ru.stqa.collections.geometry.figures.Rectangle;
+import ru.stqa.collections.geometry.figures.Square;
+import ru.stqa.collections.geometry.figures.Triangle;
 
 public class Geometry {
     public static void main(String[] args) {

@@ -1,6 +1,4 @@
-package ru.stqa.geometry.figures;
-
-import java.util.Objects;
+package ru.stqa.collections.geometry.figures;
 
 import static java.lang.Math.sqrt;
 
