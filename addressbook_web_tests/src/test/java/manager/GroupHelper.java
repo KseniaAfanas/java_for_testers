@@ -14,10 +14,10 @@ public class GroupHelper extends HelperBase {
             click(By.linkText("groups"));
         }
     }
-    public boolean isGroupPresent() {
+    /*public boolean isGroupPresent() {
         openGroupsPage();
-        return manager.isElementPresent(By.name("selected[]"));
-    }
+        return manager.isElementPresent(By.name("selected[]"));// удалили, тк нигде не используется
+    }*/
 
     public void createGroup(GroupData group) {
         openGroupsPage();
@@ -47,15 +47,13 @@ public class GroupHelper extends HelperBase {
         click(By.name("submit"));
     }
 
-
     private void initGroupCreation() {
         click(By.name("new"));
     }
 
-       private void removeSelectedGroup() {
+    private void removeSelectedGroup() {
         click(By.name("delete"));
     }
-
 
     private void returnToGroupsPage() {
         click(By.linkText("group page"));
@@ -70,17 +68,18 @@ public class GroupHelper extends HelperBase {
         type(By.name("group_name"), group.name());
         type(By.name("group_header"), group.header());
         type(By.name("group_footer"), group.footer());
-
     }
-
 
     private void initGroupModification() {
         click(By.name("edit"));
-
     }
 
     private void selectGroup() {
         click(By.name("selected[]"));
     }
 
+    public int getCount() {
+        openGroupsPage();
+        return manager.driver.findElements(By.name("selected[]")).size(); //метод, который находит много элеметов. Возвращает список. size()- возвращает размер списка
+    }
 }
