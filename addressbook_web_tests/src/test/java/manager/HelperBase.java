@@ -1,5 +1,6 @@
 package manager;
 
+import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 
 public class HelperBase {//базовый класс для всех помощников
@@ -19,4 +20,5 @@ public class HelperBase {//базовый класс для всех помощ�
         manager.driver.findElement(locator).clear();
         manager.driver.findElement(locator).sendKeys(text);
     }
+
 }

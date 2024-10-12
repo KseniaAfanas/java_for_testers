@@ -30,7 +30,7 @@ public class GroupHelper extends HelperBase {
     public void removeGroup() {
         openGroupsPage();
         selectGroup();
-        removeSelectedGroup();
+        removeSelectedGroups();
         returnToGroupsPage();
     }
     public void modifyGroup(GroupData modifiedGroup) {//метод для модификации группы
@@ -51,7 +51,7 @@ public class GroupHelper extends HelperBase {
         click(By.name("new"));
     }
 
-    private void removeSelectedGroup() {
+    private void removeSelectedGroups() {
         click(By.name("delete"));
     }
 
@@ -79,7 +79,21 @@ public class GroupHelper extends HelperBase {
     }
 
     public int getCount() {
-        openGroupsPage();
+        openGroupsPage();//открытие страницы со списком групп
         return manager.driver.findElements(By.name("selected[]")).size(); //метод, который находит много элеметов. Возвращает список. size()- возвращает размер списка
     }
+
+    public void removeAllGroups() {//метод для удаления всех групп
+        openGroupsPage();//открытие страницы со списком групп
+        selectAllGroups();//вспомогательный метод для выбора всех групп
+        removeSelectedGroups();
+        }
+
+    private void selectAllGroups() {
+        var checkboxes = manager.driver.findElements(By.name("selected[]"));
+        for (var checkbox: checkboxes){ //цикл который перебирает все элементы коллекции
+           checkbox.click();
+        }
+    }
 }
+
