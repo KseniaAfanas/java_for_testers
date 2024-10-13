@@ -15,12 +15,15 @@ public class TestBase {//базовый класс для тестов
             app.init(System.getProperty("browser","chrome"));//firefox
         }
     }
-public String randomString(int n){//функция которая генерит случайные строки. int n-длина генерируемой строки
+public static String randomString(int n){//глобальная (static) функция которая генерит случайные строки. int n-длина генерируемой строки
         var rnd = new Random();
 var result = "";//пустая строка
 for (int i=0; i<n; i++){
-    result=result+(char)('a'+rnd.nextInt(26));// число преобразовать в символ и этот вимвол прибавить к строке/ nextInt генерирует целочисленные значения
+    result=result + (char)('a'+rnd.nextInt(26));// число преобразовать в символ и этот символ прибавить к строке/ nextInt генерирует целочисленные значения. Строки состоят только из букв
 }
+/*if (n<20){
+    result = result + '\''; //экранируем кавычку
+}*///не добавляем больше ' в наименовании группы, который вызывает ошибку
     return result;
 }
 
