@@ -1,9 +1,10 @@
-package model;
+/*package model;
 
-public record ContactData(String firstname, String middlename, String lastname, String nickname, String mobile, String email) {//record-класс для моделирования данных
+public record ContactData(String firstname, String middlename, String lastname, String nickname, String mobile,String email) {
     public ContactData() {
         this ("","","","","","");
     }
+
     public ContactData WithFirstname(String firstname) {
         return new GroupData(firstname, this.middlename, this.lastname, this.nickname, this.mobile,this.email);
     }
@@ -23,4 +24,4 @@ public record ContactData(String firstname, String middlename, String lastname, 
         return new GroupData(this.firstname, this.middlename, this.lastname, this.nickname, this.mobile, email);
     }
 
-}
+}*/

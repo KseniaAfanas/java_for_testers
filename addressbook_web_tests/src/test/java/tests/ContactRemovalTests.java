@@ -1,4 +1,30 @@
-import manager.ApplicationManager;
+import model.ContactData;
+import org.junit.jupiter.api.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import tests.TestBase;
+
+public class ContactRemovalTests extends TestBase {//удаление контакта
+
+    @Test
+    public void canRemoveContact() {
+        if (!app.isContactPresent()) {//проверяем наличие кнопки Удалить, чтобы понять что мы на страничке со списком контактов
+            driver.findElement(By.linkText("home")).click();
+        }
+        try {
+            driver.findElement(By.name("selected[]"));
+        } catch (NoSuchElementException e) {
+            app.createContact(new ContactData("firstname1", "middlename1", "lastname1", "nickname1", "+79232501606", "afa@gmail.com"));//вызов метода создания контакта
+        }
+        app.removeContact();//вызов метода по удалению контакта
+
+    }
+}
+
+
+
+/*
+было до
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -6,12 +32,13 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.Dimension;
+import tests.TestBase;
 
-public class ContactRemovalTests {
+public class ContactRemovalTests extends TestBase {//удаление контакта
     private static WebDriver driver;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() {//метод инициализации
         if (driver == null) {//если переменная driver не проинициализирована, то выполняем код инициализации
             driver = new ChromeDriver();
             Runtime.getRuntime().addShutdownHook(new Thread(driver::quit));
@@ -25,7 +52,7 @@ public class ContactRemovalTests {
 
     @Test
     public void canRemoveContact() {
-        if (!isElementPresent(By.xpath("(//input[@name=\'Delete\'])"))) {
+        if (!isElementPresent(By.xpath("(//input[@name=\'Delete\'])"))) {//проверяем наличие кнопки Удалить
             driver.findElement(By.linkText("home")).click();
         }
         try {
@@ -62,3 +89,4 @@ public class ContactRemovalTests {
         }
     }
 }
+ */

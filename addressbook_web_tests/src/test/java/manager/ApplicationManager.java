@@ -1,5 +1,6 @@
 package manager;
 
+import model.ContactData;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.NoSuchElementException;
@@ -53,4 +54,37 @@ public class ApplicationManager {
 
     }
 
+    public void createContact(ContactData contact) {//метод для создания контакта
+        driver.findElement(By.linkText("add new")).click();
+        driver.findElement(By.name("firstname")).click();
+        driver.findElement(By.name("firstname")).sendKeys(contact.firstname());
+        driver.findElement(By.name("middlename")).click();
+        driver.findElement(By.name("middlename")).sendKeys(contact.middlename());
+        driver.findElement(By.name("lastname")).click();
+        driver.findElement(By.name("lastname")).sendKeys(contact.lastname());
+        driver.findElement(By.name("nickname")).click();
+        driver.findElement(By.name("nickname")).sendKeys(contact.nickname());
+        driver.findElement(By.name("mobile")).click();
+        driver.findElement(By.name("mobile")).sendKeys(contact.mobile());
+        driver.findElement(By.name("email")).click();
+        driver.findElement(By.name("email")).sendKeys(contact.email());
+        driver.findElement(By.xpath("(//input[@name=\'submit\'])")).click();//driver.findElement(By.xpath("(//input[@name=\'submit\'])[2]")).click();
+        driver.findElement(By.linkText("home page")).click();
+    }
+
+    public void openContactPage() {
+        if (!isElementPresent(By.xpath("(//input[@name=\'submit\'])"))) {//если на странице есть кнопка submit (ENTER), то никакой переход делать не требуется
+            driver.findElement(By.linkText("add new")).click();
+        }
+    }
+
+    public void removeContact() {//метод по удалению контакта
+        driver.findElement(By.name("selected[]")).click();// выбор контакта
+        driver.findElement(By.xpath("//input[@value=\'Delete\']")).click();
+        driver.findElement(By.linkText("home")).click();
+    }
+
+    public boolean isContactPresent() {
+        return isElementPresent(By.xpath("(//input[@name=\'Delete\'])"));
+    }
 }

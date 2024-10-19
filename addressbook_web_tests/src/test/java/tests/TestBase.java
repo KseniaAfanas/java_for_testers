@@ -1,7 +1,9 @@
 package tests;
 
 import manager.ApplicationManager;
+import model.ContactData;
 import org.junit.jupiter.api.BeforeEach;
+import org.openqa.selenium.By;
 
 import java.util.Random;
 
