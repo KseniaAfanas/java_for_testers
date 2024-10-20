@@ -8,8 +8,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
-public class ApplicationManager {
-    protected  WebDriver driver; /* методы для управления тестируемым приложением*/
+public class ApplicationManager {/* методы для управления тестируемым приложением*/
+    protected WebDriver driver;
     private LoginHelper session;
     private GroupHelper groups;
 
@@ -78,13 +78,22 @@ public class ApplicationManager {
         }
     }
 
+    public void openContactPresent() {
+        if (isElementPresent(By.xpath("(//input[@name=\'Delete\'])"))) { //если на странице есть кнопка Delete, то никакой переход делать не требуется
+            driver.findElement(By.linkText("home")).click();
+        }
+    }
+
+    public void checkIsContact() { // если на страниц нет контактов, то создадим
+        if (!isElementPresent(By.name("selected[]"))) {
+            createContact(new ContactData("firstname1", "middlename1", "lastname1", "nickname1", "+79232501606", "afa@gmail.com"));//вызов метода создания контакта
+        }
+    }
+
     public void removeContact() {//метод по удалению контакта
         driver.findElement(By.name("selected[]")).click();// выбор контакта
         driver.findElement(By.xpath("//input[@value=\'Delete\']")).click();
         driver.findElement(By.linkText("home")).click();
     }
 
-    public boolean isContactPresent() {
-        return isElementPresent(By.xpath("(//input[@name=\'Delete\'])"));
-    }
 }

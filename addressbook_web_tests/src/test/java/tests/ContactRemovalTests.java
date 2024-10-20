@@ -8,16 +8,9 @@ public class ContactRemovalTests extends TestBase {//удаление конта
 
     @Test
     public void canRemoveContact() {
-        if (!app.isContactPresent()) {//проверяем наличие кнопки Удалить, чтобы понять что мы на страничке со списком контактов
-            driver.findElement(By.linkText("home")).click();
-        }
-        try {
-            driver.findElement(By.name("selected[]"));
-        } catch (NoSuchElementException e) {
-            app.createContact(new ContactData("firstname1", "middlename1", "lastname1", "nickname1", "+79232501606", "afa@gmail.com"));//вызов метода создания контакта
-        }
-        app.removeContact();//вызов метода по удалению контакта
-
+        app.openContactPresent();   // перейдём на страницу, на кототой можно удалить контакт
+        app.checkIsContact();       // проверим что есть хотя бы один контакт, если нет ни одного, то создадим
+        app.removeContact();        //вызов метода по удалению контакта
     }
 }
 
