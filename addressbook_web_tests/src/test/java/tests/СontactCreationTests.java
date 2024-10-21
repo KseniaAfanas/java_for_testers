@@ -1,26 +1,48 @@
 import model.ContactData;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import tests.TestBase;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class СontactCreationTests extends TestBase {
 
-    @Test
+    /*public static List<String> contactNameProvider() {//возвращает список строк
+        var result=new ArrayList<String>();//создаем пустой список
+        for (int i=0; i<5; i++) {
+            app.contacts().createGroup(new ContactData(randomString(i*10), "firstname", "middlename"));//создание контакта. В качестве наименование будет рандомное randomString длины i*10
+        }
+    }*/
+
+    @ParameterizedTest
+    @ValueSource (strings = {"firstname1","firstname'"})
     public void canCreateContact() {//создаем контакт
-        app.openContactPage();//вызов метода openContactPage
-        app.createContact(new ContactData("firstname1", "middlename1", "lastname1", "nickname1", "+79232501606", "afa@gmail.com"));//вызов метода создания контакта
+               app.contacts().createContact(new ContactData("firstname1", "middlename1", "lastname1", "nickname1", "+79232501606", "afa@gmail.com")
+        );//вызов метода создания контакта
     }
     @Test
     public void canCreateContactWithEmptyName() {//создаем пустой контакт
-        app.openContactPage();//вызов метода openContactPage
-        app.createContact(new ContactData());//вызов метода создания пустого контакта
+                app.contacts().createContact(new ContactData());//вызов метода создания пустого контакта
     }
     @Test
     public void canCreateContactWithEmptyNameOnly() {//создаем контакт только с наименованием
-        app.openContactPage();//вызов метода openContactPage
-        var emptyContact = new ContactData();
-        var contactWithName = emptyContact.WithFirstname("some Firstname");
-        app.createContact(contactWithName);//вызов метода создания контакта c новым именем
+               app.contacts().createContact(new ContactData().WithFirstname("some Firstname"));//вызов метода создания контакта c новым именем
     }
+
+    /*@ParameterizedTest
+    @MethodSource("contactNameProvider")
+    public void CanCreateMultipleContacts() {//создаем несколько контактов со случайным наименованием в адресной книге
+        int n=5;
+        int contactCount = app.contacts().getCount();//класс помощник для получения количества контактов
+        for (int i=0; i<n; i++) {
+            app.contacts().createGroup(new ContactData(randomString(i*10), "firstname", "middlename"));//создание контакта. В качестве наименование будет рандомное randomString длины i*10
+        }
+        int newGroupCount = app.groups().getCount();//получаем новое значение
+        Assertions.assertEquals(contactCount+n, newContactCount);//новое значение должно быть больше на n
+    }*/
 }
 
 

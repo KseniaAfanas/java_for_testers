@@ -4,7 +4,7 @@ import org.openqa.selenium.By;
 
 public class LoginHelper extends HelperBase {
 
-    public LoginHelper (ApplicationManager manager){
+    public LoginHelper (ApplicationManager manager){//
         super(manager);//параметр manager передается в конструктор базового класса
     }
     void login(String user, String password) {

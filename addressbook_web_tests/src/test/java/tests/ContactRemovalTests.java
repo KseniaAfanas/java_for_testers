@@ -1,16 +1,13 @@
-import model.ContactData;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import tests.TestBase;
 
 public class ContactRemovalTests extends TestBase {//удаление контакта
 
     @Test
     public void canRemoveContact() {
-        app.openContactPresent();   // перейдём на страницу, на кототой можно удалить контакт
-        app.checkIsContact();       // проверим что есть хотя бы один контакт, если нет ни одного, то создадим
-        app.removeContact();        //вызов метода по удалению контакта
+        app.contacts().openContactPresent();   // перейдём на страницу, на кототой можно удалить контакт
+        app.contacts().checkIsContact();       // проверим что есть хотя бы один контакт, если нет ни одного, то создадим
+        app.contacts().removeContact();        //вызов метода по удалению контакта
     }
 }
 
