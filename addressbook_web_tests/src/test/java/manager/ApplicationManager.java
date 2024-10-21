@@ -20,7 +20,7 @@ public class ApplicationManager {/* методы для управления т�
             } else if ("firefox".equals(browser)) {
                 driver = new FirefoxDriver();
             } else {
-                throw new IllegalArgumentException(String.format("Unknown browser %s",browser));
+                throw new IllegalArgumentException(String.format("Unknown browser %s",browser));//исключение о неизвестном браузере
             }
                         Runtime.getRuntime().addShutdownHook(new Thread(driver::quit));//завершение джава в самом конце
             driver.get("http://localhost/addressbook/");

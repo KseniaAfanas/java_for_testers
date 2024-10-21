@@ -8,13 +8,13 @@ import org.openqa.selenium.By;
 import java.util.Random;
 
 public class TestBase {//базовый класс для тестов
-    protected static ApplicationManager app;
+    protected static ApplicationManager app;//app переменная класса
 
     @BeforeEach
     public void setUp() {
         if (app==null) {
             app = new ApplicationManager();
-            app.init(System.getProperty("browser","chrome"));//firefox
+            app.init(System.getProperty("browser","chrome"));// будет использовано либо значение свой-ва browser, либо chrome/firefox (дефолтное)
         }
     }
 public static String randomString(int n){//глобальная (static) функция которая генерит случайные строки. int n-длина генерируемой строки
