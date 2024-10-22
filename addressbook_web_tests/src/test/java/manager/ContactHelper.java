@@ -4,25 +4,24 @@ import model.ContactData;
 import model.GroupData;
 import org.openqa.selenium.By;
 
-    public class ContactHelper{
-    private final ApplicationManager manager;
+    public class ContactHelper extends HelperBase{
 
     public ContactHelper (ApplicationManager manager){//конструктор в котором передается ссылка на менеджера
-        this.manager=manager;//параметр manager передается в конструктор базового класса
+        super(manager);
     }
 
     public void createGroup(ContactData contactData) {
     }
 
-    public void openContactPage() {
+    public void openContactPage() {//открыть страницу создания нового контакта
         if (!manager.isElementPresent(By.xpath("(//input[@name=\'submit\'])"))) {//если на странице есть кнопка submit (ENTER), то никакой переход делать не требуется
             initContactCreation();
         }
     }
 
-        public void openContactPresent() {
+        public void openContactPresent() {//открыть страницу со списком контактов
             if (manager.isElementPresent(By.xpath("(//input[@name=\'Delete\'])"))) { //если на странице есть кнопка Delete, то никакой переход делать не требуется
-                сlick(By.linkText("home"));
+                click(By.linkText("home"));
             }
         }
 
@@ -44,20 +43,20 @@ import org.openqa.selenium.By;
 
         public void removeContact() {//метод по удалению контакта
             selectContact();//выбираем контакт
-            removeSelectedContact();//удаляем контакт
+            removeSelectedContacts();//удаляем контакт
             returnToHomePage();//возвращаемся на страницу с контактами
         }
 
         private void submitContactCreation() {//сохранение данных по контакту
-            сlick(By.xpath("(//input[@name=\'submit\'])"));//driver.findElement(By.xpath("(//input[@name=\'submit\'])[2]")).click();
+            click(By.xpath("(//input[@name=\'submit\'])"));//driver.findElement(By.xpath("(//input[@name=\'submit\'])[2]")).click();
         }
 
                private void initContactCreation() {//метод по открытию формы с новым контактом
-            сlick(By.linkText("add new"));
+                   click(By.linkText("add new"));
         }
 
-        private void removeSelectedContact() {//удаление контакта
-            сlick(By.xpath("//input[@value=\'Delete\']"));
+        private void removeSelectedContacts() {//удаление контакта
+            click(By.xpath("//input[@value=\'Delete\']"));
         }
 
         public void checkIsContact() { // если на странице нет контактов, то создадим
@@ -65,12 +64,11 @@ import org.openqa.selenium.By;
                 createContact(new ContactData("firstname1", "middlename1", "lastname1", "nickname1", "+79232501606", "afa@gmail.com"));//вызов метода создания контакта
             }
         }
-
         private void selectContact() {
-            сlick(By.name("selected[]"));// выбор контакта
+            click(By.name("selected[]"));// выбор контакта
         }
         private void initContactModification() {
-            сlick(By.cssSelector("[title='Edit']"));
+            click(By.cssSelector("[title='Edit']"));
         }
         private void fillContactForm(ContactData contact) {//метод для изменения данных контакта
             type(By.name("firstname"), contact.firstname());
@@ -81,20 +79,28 @@ import org.openqa.selenium.By;
             type(By.name("email"), contact.email());
         }
 
-        private void type(By locator, String text) {//метод для заполнения поля с контактными данными
-            сlick(locator);
-            manager.driver.findElement(locator).clear();//очистить поле ввода
-            manager.driver.findElement(locator).sendKeys(text);
-        }
-
         private void submitContactModification() {
-            сlick(By.name("update"));
+            click(By.name("update"));
         }
         private void returnToHomePage() {
-            сlick(By.linkText("home"));
-        }
-        private void сlick(By locator) {
-            manager.driver.findElement(locator).click();
+            click(By.linkText("home"));
         }
 
+        public int getCount() {//метод для подсчета элементов
+            openContactPresent();
+            return manager.driver.findElements(By.name("selected[]")).size(); //метод, который находит много элеметов. Возвращает список. size()- возвращает размер списка
+        }
+
+        public void removeAllContacts() {//метод для удаления всх контактов
+            openContactPresent();
+            selectAllContacts();//отметить галочкой все контакты на странице контактов
+            removeSelectedContacts();
+    }
+
+        private void selectAllContacts() {
+            var checkboxes=manager.driver.findElements(By.name("selected[]")); //метод, который находит много элеметов. Возвращает список. size()- возвращает размер списка
+            for (var checkbox : checkboxes) {//цикл, который перебирает все элементы коллекции checkboxes
+                checkbox.click();
+            }
+        }
     }

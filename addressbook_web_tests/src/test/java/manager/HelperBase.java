@@ -15,9 +15,9 @@ public class HelperBase {//базовый класс для всех помощ�
         manager.driver.findElement(locator).click();
     }
 
-    protected void type(By locator, String text) {
+    protected void type(By locator, String text) {//метод для заполнения поля с контактными данными
         click(locator);
-        manager.driver.findElement(locator).clear();
+        manager.driver.findElement(locator).clear();//очистить поле ввода
         manager.driver.findElement(locator).sendKeys(text);
     }
 

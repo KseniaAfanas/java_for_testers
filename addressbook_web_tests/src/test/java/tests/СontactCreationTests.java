@@ -1,4 +1,5 @@
 import model.ContactData;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -19,9 +20,11 @@ public class СontactCreationTests extends TestBase {
 
     @ParameterizedTest
     @ValueSource (strings = {"firstname1","firstname'"})
-    public void canCreateContact() {//создаем контакт
-               app.contacts().createContact(new ContactData("firstname1", "middlename1", "lastname1", "nickname1", "+79232501606", "afa@gmail.com")
-        );//вызов метода создания контакта
+    public void canCreateContact() {//создаем контакт, в результате сознания, контактов становися больше на +1
+        int contactCount = app.contacts().getCount();//считаем количество контактов ДО
+               app.contacts().createContact(new ContactData("firstname1", "middlename1", "lastname1", "nickname1", "+79232501606", "afa1@gmail.com"));//вызов метода создания контакта
+        int newContactCount = app.contacts().getCount();//считаем количество контактов ПОСЛЕ
+        Assertions.assertEquals(contactCount+1,newContactCount);
     }
     @Test
     public void canCreateContactWithEmptyName() {//создаем пустой контакт

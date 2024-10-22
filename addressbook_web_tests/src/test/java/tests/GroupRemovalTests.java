@@ -18,7 +18,7 @@ public class GroupRemovalTests extends TestBase{
 
     }
     @Test
-    void canRemoveAllGroupsAtOnce() {
+    void canRemoveAllGroupsAtOnce() {//удаляем все группы одновременно
         if (app.groups().getCount()==0) {//проверяем наличие группы путем подсчета, если количество=0, то группы нет. Раньше тут был isGroupPresent (проверял наличие хотя бы одной группы)
             app.groups().createGroup(new GroupData("group name", "group header", "group footer"));
         }

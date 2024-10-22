@@ -1,4 +1,8 @@
+import model.ContactData;
+import model.GroupData;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.By;
 import tests.TestBase;
 
 public class ContactRemovalTests extends TestBase {//удаление контакта
@@ -6,8 +10,23 @@ public class ContactRemovalTests extends TestBase {//удаление конта
     @Test
     public void canRemoveContact() {
         app.contacts().openContactPresent();   // перейдём на страницу, на кототой можно удалить контакт
-        app.contacts().checkIsContact();       // проверим что есть хотя бы один контакт, если нет ни одного, то создадим
+        if (app.contacts().getCount()==0) {
+            app.contacts().createContact(new ContactData("firstname1", "middlename1", "lastname1", "nickname1", "+79232501606", "afa@gmail.com"));//вызов метода создания контакта
+        }
+//        app.contacts().checkIsContact();       // проверим что есть хотя бы один контакт, если нет ни одного, то создадим
+        int contactCount = app.contacts().getCount();//считаем количество контактов ДО
         app.contacts().removeContact();        //вызов метода по удалению контакта
+        int newContactCount = app.contacts().getCount();//считаем количество контактов ПОСЛЕ
+        Assertions.assertEquals(contactCount-1,newContactCount);
+    }
+    @Test
+    void canRemoveAllGroupsAtOnce() {//удаляем все контакты одновременно
+        app.contacts().openContactPresent();   // перейдём на страницу, на кототой можно удалить контакт
+        if (app.contacts().getCount()==0) {
+            app.contacts().createContact(new ContactData("firstname1", "middlename1", "lastname1", "nickname1", "+79232501606", "afa@gmail.com"));//вызов метода создания контакта
+        }
+        app.contacts().removeAllContacts();
+        Assertions.assertEquals(0, app.contacts().getCount());//ожидаем 0 сравниваем с результатом выполнения метода по подсчету количества контактов
     }
 }
 
