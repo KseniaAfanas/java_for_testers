@@ -35,17 +35,18 @@ public class СontactCreationTests extends TestBase {
                app.contacts().createContact(new ContactData().WithFirstname("some Firstname"));//вызов метода создания контакта c новым именем
     }
 
-    /*@ParameterizedTest
-    @MethodSource("contactNameProvider")
+    //@ParameterizedTest
+    //@MethodSource("contactNameProvider")
+    @Test
     public void CanCreateMultipleContacts() {//создаем несколько контактов со случайным наименованием в адресной книге
         int n=5;
         int contactCount = app.contacts().getCount();//класс помощник для получения количества контактов
         for (int i=0; i<n; i++) {
-            app.contacts().createGroup(new ContactData(randomString(i*10), "firstname", "middlename"));//создание контакта. В качестве наименование будет рандомное randomString длины i*10
+            app.contacts().createContact(new ContactData(randomString(i*10), "middlename1", "lastname1", "nickname1", "+79232501606", "afa1@gmail.com"));//создание контакта. В качестве наименование будет рандомное randomString длины i*10
         }
-        int newGroupCount = app.groups().getCount();//получаем новое значение
+        int newContactCount = app.contacts().getCount();//получаем новое значение
         Assertions.assertEquals(contactCount+n, newContactCount);//новое значение должно быть больше на n
-    }*/
+    }
 }
 
 
