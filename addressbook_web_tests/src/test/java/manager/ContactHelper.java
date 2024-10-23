@@ -1,7 +1,6 @@
 package manager;
 
 import model.ContactData;
-import model.GroupData;
 import org.openqa.selenium.By;
 
     public class ContactHelper extends HelperBase{
@@ -61,7 +60,7 @@ import org.openqa.selenium.By;
 
         public void checkIsContact() { // если на странице нет контактов, то создадим
             if (!manager.isElementPresent(By.name("selected[]"))) {
-                createContact(new ContactData("firstname1", "middlename1", "lastname1", "nickname1", "+79232501606", "afa@gmail.com"));//вызов метода создания контакта
+                createContact(new ContactData("", "middlename1", "lastname1", "nickname1", "+79232501606", "afa@gmail.com", "firstname1"));//вызов метода создания контакта
             }
         }
         private void selectContact() {

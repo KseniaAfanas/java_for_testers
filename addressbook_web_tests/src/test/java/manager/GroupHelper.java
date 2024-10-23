@@ -3,6 +3,11 @@ package manager;
 import model.GroupData;
 import org.openqa.selenium.By;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.lang.String.format;
+
 public class GroupHelper extends HelperBase {
 
     public GroupHelper (ApplicationManager manager){
@@ -27,15 +32,15 @@ public class GroupHelper extends HelperBase {
         returnToGroupsPage();
     }
 
-    public void removeGroup() {
+    public void removeGroup(GroupData group) {//в качесте параметра принимает объект типа GroupData
         openGroupsPage();
-        selectGroup();
+        selectGroup(group);
         removeSelectedGroups();
         returnToGroupsPage();
     }
     public void modifyGroup(GroupData modifiedGroup) {//метод для модификации группы
         openGroupsPage();
-        selectGroup();//выбрать группу (отметить галочкой)
+        selectGroup(null);//выбрать группу (отметить галочкой)
         initGroupModification();//нажать кнопку модификации Edit
         fillGroupForm(modifiedGroup);//заполнить форму данными, которые содержатся в переданном объекте
         submitGroupModification();//сохраняем форму
@@ -74,8 +79,8 @@ public class GroupHelper extends HelperBase {
         click(By.name("edit"));
     }
 
-    private void selectGroup() {
-        click(By.name("selected[]"));
+    private void selectGroup(GroupData group) {//параметр-объект типа GroupData, который содержит идентификатор нужной группы
+        click(By.cssSelector(String.format("input[value='%s']",group.id())));
     }
 
     public int getCount() {
@@ -94,6 +99,18 @@ public class GroupHelper extends HelperBase {
         for (var checkbox: checkboxes){ //цикл который перебирает все элементы коллекции
            checkbox.click();
         }
+    }
+
+    public List<GroupData> getList() {
+        var groups = new ArrayList<GroupData>(); //цикл, который читает данные из ИБ, анализирует их и строит список. Создаем пустой список
+        var spans = manager.driver.findElements(By.cssSelector("span.group"));//получить со страницы список элементов, которые содержат информацию о группах
+        for (var span:spans){
+            var name = span.getText();//название группы это текст, поэтому его получаем с помощью getText
+var checkbox = span.findElement(By.name("selected[]")); //найдем чекбокс, который находится внутри элемента span
+            var id= checkbox.getAttribute("value");//получаем идентификатор
+            groups.add(new GroupData().WithId(id).WithName(name));// в список groups добавляем новый объект
+        }
+        return groups;
     }
 }
 

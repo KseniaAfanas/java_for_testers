@@ -1,5 +1,4 @@
 import model.ContactData;
-import model.GroupData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -18,7 +17,7 @@ public class СontactCreationTests extends TestBase {
                     for (var nickname: List.of("","nickname")) {
                         for (var mobile: List.of("","mobile")) {
                             for (var email: List.of("","email")) {
-                                result.add(new ContactData(firstname, middlename, lastname, nickname,mobile,email));//добавляем значение в список генерируемых объектов
+                                result.add(new ContactData().WithFirstname(firstname).WithMiddlename(middlename).WithLastname(lastname).WithNickname(nickname).WithMobile(mobile).WithEmail(email));//добавляем значение в список генерируемых объектов. Идентификаторов пока нет
                         }
                     }
                     }
@@ -26,7 +25,13 @@ public class СontactCreationTests extends TestBase {
             }
         }
         for (int i=0; i<5; i++) {
-            result.add(new ContactData(randomString(i*10),randomString(i*10),randomString(i*10),randomString(i*10),randomString(i*10),randomString(i*10)));//создание контакта. В качестве наименование будет рандомное randomString длины i*10
+            result.add(new ContactData()
+                    .WithFirstname(randomString(i*10))
+                    .WithMiddlename(randomString(i*10))
+                    .WithLastname(randomString(i*10))
+                    .WithNickname(randomString(i*10))
+                    .WithMobile(randomString(i*10))
+                    .WithEmail(randomString(i*10)));//создание контакта. В качестве наименование будет рандомное randomString длины i*10
         }
         return result;
     }
@@ -42,7 +47,7 @@ public class СontactCreationTests extends TestBase {
 
     public static List<ContactData> negativeContactProvider() {//возвращает список объектов ContactData
         var result=new ArrayList<ContactData>(List.of(
-                new ContactData ("firstname'","","", "", "", "")));//инициализируем создаваемый список соответствующими значениями
+                new ContactData ("", "", "", "", "", "", "firstname'")));//инициализируем создаваемый список соответствующими значениями
                 return result;
     }
 
