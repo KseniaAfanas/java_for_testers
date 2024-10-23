@@ -1,9 +1,8 @@
 import model.ContactData;
+import model.GroupData;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import tests.TestBase;
 
 import java.util.ArrayList;
@@ -11,45 +10,70 @@ import java.util.List;
 
 public class СontactCreationTests extends TestBase {
 
-    /*public static List<String> contactNameProvider() {//возвращает список строк
-        var result=new ArrayList<String>();//создаем пустой список
-        for (int i=0; i<5; i++) {
-            app.contacts().createGroup(new ContactData(randomString(i*10), "firstname", "middlename"));//создание контакта. В качестве наименование будет рандомное randomString длины i*10
+    public static List<ContactData> contactProvider() {//возвращает список объектов ContactData
+        var result=new ArrayList<ContactData>();//инициализируем создаваемый список соответствующими значениями
+        for (var firstname: List.of("","firstname")) {//цикл, который перебирает два возможных значния (пустая и НЕ пустая строка)
+            for (var middlename: List.of("","middlename")){//для каждого из этих названий внутри вложенный цикл, который перебирает 2  воможных значения middlename
+                for (var lastname: List.of("","lastname")) {//для каждой пары перебираем возможные значения lastname
+                    for (var nickname: List.of("","nickname")) {
+                        for (var mobile: List.of("","mobile")) {
+                            for (var email: List.of("","email")) {
+                                result.add(new ContactData(firstname, middlename, lastname, nickname,mobile,email));//добавляем значение в список генерируемых объектов
+                        }
+                    }
+                    }
+                }
+            }
         }
-    }*/
+        for (int i=0; i<5; i++) {
+            result.add(new ContactData(randomString(i*10),randomString(i*10),randomString(i*10),randomString(i*10),randomString(i*10),randomString(i*10)));//создание контакта. В качестве наименование будет рандомное randomString длины i*10
+        }
+        return result;
+    }
 
     @ParameterizedTest
-    @ValueSource (strings = {"firstname1","firstname'"})
-    public void canCreateContact() {//создаем контакт, в результате сознания, контактов становися больше на +1
-        int contactCount = app.contacts().getCount();//считаем количество контактов ДО
-               app.contacts().createContact(new ContactData("firstname1", "middlename1", "lastname1", "nickname1", "+79232501606", "afa1@gmail.com"));//вызов метода создания контакта
-        int newContactCount = app.contacts().getCount();//считаем количество контактов ПОСЛЕ
-        Assertions.assertEquals(contactCount+1,newContactCount);
-    }
-    @Test
-    public void canCreateContactWithEmptyName() {//создаем пустой контакт
-                app.contacts().createContact(new ContactData());//вызов метода создания пустого контакта
-    }
-    @Test
-    public void canCreateContactWithEmptyNameOnly() {//создаем контакт только с наименованием
-               app.contacts().createContact(new ContactData().WithFirstname("some Firstname"));//вызов метода создания контакта c новым именем
+    @MethodSource("contactProvider")//провайдер тестовых данных, который генерирует данные с фикс значениями или сгенерированными
+       public void CanCreateMultipleContacts(ContactData contact) {//создаем несколько контактов со случайным наименованием в адресной книге
+        int contactCount = app.contacts().getCount();//класс помощник для получения количества контактов
+        app.contacts().createContact(contact);//создание контакта. В качестве наименование будет рандомное randomString длины i*10
+        int newContactCount = app.contacts().getCount();//получаем новое значение
+        Assertions.assertEquals(contactCount+1, newContactCount);//новое значение должно быть больше на n
     }
 
-    //@ParameterizedTest
-    //@MethodSource("contactNameProvider")
-    @Test
-    public void CanCreateMultipleContacts() {//создаем несколько контактов со случайным наименованием в адресной книге
-        int n=5;
-        int contactCount = app.contacts().getCount();//класс помощник для получения количества контактов
-        for (int i=0; i<n; i++) {
-            app.contacts().createContact(new ContactData(randomString(i*10), "middlename1", "lastname1", "nickname1", "+79232501606", "afa1@gmail.com"));//создание контакта. В качестве наименование будет рандомное randomString длины i*10
-        }
-        int newContactCount = app.contacts().getCount();//получаем новое значение
-        Assertions.assertEquals(contactCount+n, newContactCount);//новое значение должно быть больше на n
+    public static List<ContactData> negativeContactProvider() {//возвращает список объектов ContactData
+        var result=new ArrayList<ContactData>(List.of(
+                new ContactData ("firstname'","","", "", "", "")));//инициализируем создаваемый список соответствующими значениями
+                return result;
     }
+
+    @ParameterizedTest
+    @MethodSource ("negativeContactProvider")//метод который создает контакт с апострофом (всегда падает, поэтому выделяем отдельно)
+    public void CanNotContact(ContactData contact) {//НЕ создается контакт с заданными параметрами
+        int contactCount = app.contacts().getCount();//класс помощник для получения количества контактов
+        app.contacts().createContact(contact);//создание контакта. В качестве наименование будет рандомное randomString длины i*10
+        int newContactCount = app.contacts().getCount();//получаем новое значение
+        Assertions.assertEquals(contactCount, newContactCount);//проверяем, что количество контактов не изменяется
+    }
+
 }
 
+    /*@ParameterizedTest
+    @ValueSource (strings = {"firstname1","firstname'"})
+    public void canCreateContact(String name) {//создаем контакт, в результате сознания, контактов становися больше на +1
+        int contactCount = app.contacts().getCount();//считаем количество контактов ДО
+               app.contacts().createContact(new ContactData(name, "middlename1", "lastname1", "nickname1", "+79232501606", "afa1@gmail.com"));//вызов метода создания контакта
+        int newContactCount = app.contacts().getCount();//считаем количество контактов ПОСЛЕ
+        Assertions.assertEquals(contactCount+1,newContactCount);
+    }*/
+    /*@Test
+    public void canCreateContactWithEmptyName() {//создаем пустой контакт
+                app.contacts().createContact(new ContactData());//вызов метода создания пустого контакта
+    }*/
 
+    /*@Test
+    public void canCreateContactWithEmptyNameOnly() {//создаем контакт только с наименованием
+               app.contacts().createContact(new ContactData().WithFirstname("some Firstname"));//вызов метода создания контакта c новым именем
+    }*/
 /*
 было до
 import org.junit.jupiter.api.BeforeEach;
