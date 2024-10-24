@@ -1,9 +1,13 @@
 package manager;
 
 import model.ContactData;
+import model.GroupData;
 import org.openqa.selenium.By;
 
-    public class ContactHelper extends HelperBase{
+import java.util.ArrayList;
+import java.util.List;
+
+public class ContactHelper extends HelperBase{
 
     public ContactHelper (ApplicationManager manager){//конструктор в котором передается ссылка на менеджера
         super(manager);
@@ -33,15 +37,15 @@ import org.openqa.selenium.By;
         }
 
         public void modifyContact(ContactData modifiedContact) {//метод для модификации контакта
-            selectContact();//выбрать контакт (отметить галочкой)
+            selectContact(null);//выбрать контакт (отметить галочкой)
             initContactModification();//нажать кнопку модификации Edit
             fillContactForm(modifiedContact);//заполнить форму данными, которые содержатся в переданном объекте
             submitContactModification();//сохраняем форму  по кнопке Update
             returnToHomePage();//возврат на страницу контактов
         }
 
-        public void removeContact() {//метод по удалению контакта
-            selectContact();//выбираем контакт
+        public void removeContact(ContactData contact) {//метод по удалению контакта
+            selectContact(contact);//выбираем контакт
             removeSelectedContacts();//удаляем контакт
             returnToHomePage();//возвращаемся на страницу с контактами
         }
@@ -63,8 +67,8 @@ import org.openqa.selenium.By;
                 createContact(new ContactData("", "middlename1", "lastname1", "nickname1", "+79232501606", "afa@gmail.com", "firstname1"));//вызов метода создания контакта
             }
         }
-        private void selectContact() {
-            click(By.name("selected[]"));// выбор контакта
+        private void selectContact(ContactData contact) {
+            click(By.cssSelector(String.format("input[value='%s']",contact.id())));// выбор контакта
         }
         private void initContactModification() {
             click(By.cssSelector("[title='Edit']"));
@@ -102,4 +106,17 @@ import org.openqa.selenium.By;
                 checkbox.click();
             }
         }
+
+        public List<ContactData> getList() {
+        var contacts = new ArrayList<ContactData>();//цикл, который читает данные из ИБ, анализирует их и строит список. Создаем пустой список, в который будем складовать контакты
+        var tds = manager.driver.findElements(By.cssSelector("table.sortcompletecallback-applyZebra"));//получить со страницы список элементов, которые содержат информацию о контактах
+            for (var row: tds){//в цикле перебираем строки
+                var cells = row.findElements(By.tagName("td"));//разбиваем строку на ячейки
+                var firstname = cells.get(2).getText();//название контакта это текст, поэтому его получаем с помощью getText
+                var checkbox = cells.get(0).findElement(By.name("selected[]")); //найдем чекбокс, который находится внутри элемента td
+                var id = checkbox.getAttribute("value");//получаем идентификатор
+                contacts.add(new ContactData().WithId(id).WithFirstname(firstname));// в список контактов добавляем новый объект
+            }
+            return contacts;
+    }
     }
