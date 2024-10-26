@@ -113,7 +113,7 @@ public class ContactHelper extends HelperBase{
         var tds = manager.driver.findElements(By.xpath("//table[@class='sortcompletecallback-applyZebra']/tbody/tr"));//получить со страницы список элементов, которые содержат информацию о контактах
                for (var row: tds) {//в цикле перебираем строки
             var cells = row.findElements(By.tagName("td"));//разбиваем строку на ячейки
-            if (!cells.isEmpty()) {// только если вернулсне пустой список ячеек td
+            if (!cells.isEmpty()) {// только если вернули не пустой список ячеек td
                 var firstname = cells.get(2).getText();//название контакта это текст, поэтому его получаем с помощью getText
                 var checkbox = cells.get(0).findElement(By.name("selected[]")); //найдем чекбокс, который находится внутри элемента td
                 var id = checkbox.getAttribute("value");//получаем идентификатор

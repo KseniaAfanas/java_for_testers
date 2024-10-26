@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class GroupCreationTests extends TestBase{
@@ -30,10 +31,20 @@ public class GroupCreationTests extends TestBase{
     @ParameterizedTest
     @MethodSource ("groupProvider")//метод который создает группы
     public void CanCreateMultipleGroups(GroupData group) {//создается одна группа со сгенерированным наименованием, header и footer
-        int groupCount = app.groups().getCount();//класс помощник для получения количества групп
+        var oldGroups = app.groups().getList();//функция, которая возвращает старый список обектов типа GroupData
     app.groups().createGroup(group);//создаём группу, которая передается в качестве параметра в тестируемую функцию
-        int newGroupCount = app.groups().getCount();//получаем новое значение
-        Assertions.assertEquals(groupCount+1, newGroupCount);//проверяем что создана одна новая группа
+        var newGroups = app.groups().getList();//новый список групп отсортирован по названиям, которые получились после модификации
+        Comparator<GroupData> compareById = (o1, o2) -> {
+            return Integer.compare(Integer.parseInt(o1.id()), Integer.parseInt(o2.id()));//сравниваем идентификаторы групп, они не числа, а строки
+        };
+        newGroups.sort(compareById);//в метод сорт передаем компаратор, который сравнивает 2 объекта и отвечает какой больше, а какой меньше: 1й больше возвращает 1, 2й больше возвращает -1, если равны 0
+
+        var expectedList = new ArrayList<>(oldGroups);//ожидаемый список построен из старого списка oldGroups отсортирован по названиям, которые были ДО модификации
+expectedList.add(group.WithId(newGroups.get(newGroups.size()-1).id()).WithHeader("").WithFooter(""));
+//созданная группа будет иметь такой же идентификатор, как у последнего элемента в списке newGroups. Сравниваем только имена и идентификаторы, НО перед сортировкой вписываем пустой хедер и футер, чтобы тест проходил успешно
+expectedList.sort(compareById);//сортируем ожидаемый список
+        Assertions.assertEquals(newGroups,expectedList);//проверка, которая сравнивает 2 списка ожидаемый и реальный
+
     }
 
     public static List<GroupData> negativeGroupProvider() {//возвращает список строк объектов типа GroupData
@@ -45,10 +56,10 @@ public class GroupCreationTests extends TestBase{
     @ParameterizedTest
     @MethodSource ("negativeGroupProvider")//метод который создает группы с апострофом (всегда падает, поэтому выделяем отдельно)
     public void CanNotGroups(GroupData group) {//НЕ создается группа с заданными параметрами
-        int groupCount = app.groups().getCount();//класс помощник для получения количества групп
+        var oldGroups =app.groups().getList();//получаем старый список
         app.groups().createGroup(group);//создаём группу, которая передается в качестве параметра в тестируемую функцию
-        int newGroupCount = app.groups().getCount();//получаем новое значение
-        Assertions.assertEquals(groupCount, newGroupCount);//проверяем, что количество групп не изменяется
+        var newGroups =app.groups().getList();//получаем новый список после того как группа не создана
+        Assertions.assertEquals(newGroups, oldGroups);//проверяем, что количество групп не изменяется
     }
 }
 

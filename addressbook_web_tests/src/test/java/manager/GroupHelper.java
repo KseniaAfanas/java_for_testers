@@ -38,9 +38,9 @@ public class GroupHelper extends HelperBase {
         removeSelectedGroups();
         returnToGroupsPage();
     }
-    public void modifyGroup(GroupData modifiedGroup) {//метод для модификации группы
+    public void modifyGroup(GroupData group, GroupData modifiedGroup) {//метод для модификации группы
         openGroupsPage();
-        selectGroup(null);//выбрать группу (отметить галочкой)
+        selectGroup(group);//выбрать группу (отметить галочкой)
         initGroupModification();//нажать кнопку модификации Edit
         fillGroupForm(modifiedGroup);//заполнить форму данными, которые содержатся в переданном объекте
         submitGroupModification();//сохраняем форму
@@ -102,6 +102,7 @@ public class GroupHelper extends HelperBase {
     }
 
     public List<GroupData> getList() {
+        openGroupsPage();//открытие страницы со списком групп
         var groups = new ArrayList<GroupData>(); //цикл, который читает данные из ИБ, анализирует их и строит список. Создаем пустой список
         var spans = manager.driver.findElements(By.cssSelector("span.group"));//получить со страницы список элементов, которые содержат информацию о группах
         for (var span:spans){
