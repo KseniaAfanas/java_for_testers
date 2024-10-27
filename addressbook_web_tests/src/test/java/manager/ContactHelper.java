@@ -36,8 +36,8 @@ public class ContactHelper extends HelperBase{
             returnToHomePage();//вернуться на станицу с контактами
         }
 
-        public void modifyContact(ContactData modifiedContact) {//метод для модификации контакта
-            selectContact(null);//выбрать контакт (отметить галочкой)
+        public void modifyContact(ContactData contact, ContactData modifiedContact) {//метод для модификации контакта
+            selectContact(contact);//выбрать контакт (отметить галочкой)
             initContactModification();//нажать кнопку модификации Edit
             fillContactForm(modifiedContact);//заполнить форму данными, которые содержатся в переданном объекте
             submitContactModification();//сохраняем форму  по кнопке Update
@@ -108,6 +108,7 @@ public class ContactHelper extends HelperBase{
         }
 
         public List<ContactData> getList() {
+            openContactPresent();//почему-то без неё тоже работает
         var contacts = new ArrayList<ContactData>();//цикл, который читает данные из ИБ, анализирует их и строит список. Создаем пустой список, в который будем складовать контакты
 //        var tds = manager.driver.findElements(By.cssSelector("table.sortcompletecallback-applyZebra"));//получить со страницы список элементов, которые содержат информацию о контактах
         var tds = manager.driver.findElements(By.xpath("//table[@class='sortcompletecallback-applyZebra']/tbody/tr"));//получить со страницы список элементов, которые содержат информацию о контактах

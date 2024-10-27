@@ -24,7 +24,7 @@ public class GroupRemovalTests extends TestBase{
         var expectedList = new ArrayList<>(oldGroups);//строим копию списка oldGroups
         expectedList.remove(index);//удаляем элемент с заданным индексом. expectedList - ожидаемый список
         //int newGroupCount = app.groups().getCount();//подсчитываем количество групп непосредственно ПОСЛЕ выполнения тестируемой операции
-        Assertions.assertNotEquals(newGroups, expectedList);//сравниваем размеры списков
+        Assertions.assertEquals(newGroups, expectedList);//сравниваем размеры списков
     }
     @Test
     void canRemoveAllGroupsAtOnce() {//удаляем все группы одновременно

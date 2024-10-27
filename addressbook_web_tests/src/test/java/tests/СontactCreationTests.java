@@ -5,6 +5,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import tests.TestBase;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class СontactCreationTests extends TestBase {
@@ -39,10 +40,17 @@ public class СontactCreationTests extends TestBase {
     @ParameterizedTest
     @MethodSource("contactProvider")//провайдер тестовых данных, который генерирует данные с фикс значениями или сгенерированными
        public void CanCreateMultipleContacts(ContactData contact) {//создаем несколько контактов со случайным наименованием в адресной книге
-        int contactCount = app.contacts().getCount();//класс помощник для получения количества контактов
+        var oldContacts = app.contacts().getList();//класс помощник для получения списка контактов
         app.contacts().createContact(contact);//создание контакта. В качестве наименование будет рандомное randomString длины i*10
-        int newContactCount = app.contacts().getCount();//получаем новое значение
-        Assertions.assertEquals(contactCount+1, newContactCount);//новое значение должно быть больше на n
+        var newContacts = app.contacts().getList();
+        Comparator<ContactData> compareById = (o1, o2) -> {
+            return Integer.compare(Integer.parseInt(o1.id()), Integer.parseInt(o2.id()));//сравниваем идентификаторы контактов, они не числа, а строки
+        };
+        newContacts.sort(compareById);
+        var expectedList = new ArrayList<>(oldContacts);//строим копию списка oldContacts
+        expectedList.add(contact.WithId(newContacts.get(newContacts.size()-1).id()));
+        expectedList.sort(compareById);
+        Assertions.assertEquals(newContacts,expectedList);//проверка, которая сравнивает 2 списка ожидаемый и реальный
     }
 
     public static List<ContactData> negativeContactProvider() {//возвращает список объектов ContactData
@@ -54,10 +62,10 @@ public class СontactCreationTests extends TestBase {
     @ParameterizedTest
     @MethodSource ("negativeContactProvider")//метод который создает контакт с апострофом (всегда падает, поэтому выделяем отдельно)
     public void CanNotContact(ContactData contact) {//НЕ создается контакт с заданными параметрами
-        int contactCount = app.contacts().getCount();//класс помощник для получения количества контактов
+        var oldContacts = app.contacts().getList();//класс помощник для получения списка контактов;
         app.contacts().createContact(contact);//создание контакта. В качестве наименование будет рандомное randomString длины i*10
-        int newContactCount = app.contacts().getCount();//получаем новое значение
-        Assertions.assertEquals(contactCount, newContactCount);//проверяем, что количество контактов не изменяется
+        var newContacts = app.contacts().getList();//получаем новое значение
+        Assertions.assertEquals(newContacts, oldContacts);//проверяем, что количество контактов не изменяется
     }
 
 }
