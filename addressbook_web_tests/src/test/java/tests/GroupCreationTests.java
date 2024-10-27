@@ -46,7 +46,6 @@ expectedList.sort(compareById);//сортируем ожидаемый спис�
         Assertions.assertEquals(newGroups,expectedList);//проверка, которая сравнивает 2 списка ожидаемый и реальный
 
     }
-
     public static List<GroupData> negativeGroupProvider() {//возвращает список строк объектов типа GroupData
         var result = new ArrayList<GroupData>(List.of(
                 new GroupData("", "", "", "group name'")));//создаем пустой список, а потом инициализируем: добавили параметры ("group name","group name'")
