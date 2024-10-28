@@ -5,7 +5,7 @@ public record GroupData(String id, String header, String footer, String name) {
         this ("", "", "", "");
     }
 
-    public GroupData WithName(String name) {return new GroupData(this.id, name, this.header, this.footer);//возвращаем новый объект у которого ИМЯ другое, а header/footer такие же как у существующего объекта
+    public GroupData WithName(String name) {return new GroupData(this.id, this.header, this.footer, name);//возвращаем новый объект у которого ИМЯ другое, а header/footer такие же как у существующего объекта
     }
     public GroupData WithHeader(String header) {return new GroupData(this.id, header, this.footer, this.name);}
     public GroupData WithId(String id) {return new GroupData(id, this.header, this.footer, this.name);}//метод,
