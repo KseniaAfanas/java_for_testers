@@ -38,7 +38,7 @@ public class ContactHelper extends HelperBase{
 
         public void modifyContact(ContactData contact, ContactData modifiedContact) {//метод для модификации контакта
             selectContact(contact);//выбрать контакт (отметить галочкой)
-            initContactModification();//нажать кнопку модификации Edit
+            initContactModification(contact);//нажать кнопку модификации Edit
             fillContactForm(modifiedContact);//заполнить форму данными, которые содержатся в переданном объекте
             submitContactModification();//сохраняем форму  по кнопке Update
             returnToHomePage();//возврат на страницу контактов
@@ -70,8 +70,9 @@ public class ContactHelper extends HelperBase{
         private void selectContact(ContactData contact) {
             click(By.cssSelector(String.format("input[value='%s']",contact.id())));// выбор контакта
         }
-        private void initContactModification() {
-            click(By.cssSelector("[title='Edit']"));
+        private void initContactModification(ContactData contact) {
+            click(By.cssSelector(String.format("[href='edit.php?id=%s']",contact.id())));//выбор карандаша для редактирования контакта
+
         }
         private void fillContactForm(ContactData contact) {//метод для изменения данных контакта
             type(By.name("firstname"), contact.firstname());
