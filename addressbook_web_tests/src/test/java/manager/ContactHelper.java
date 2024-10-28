@@ -116,9 +116,10 @@ public class ContactHelper extends HelperBase{
             var cells = row.findElements(By.tagName("td"));//разбиваем строку на ячейки
             if (!cells.isEmpty()) {// только если вернули не пустой список ячеек td
                 var firstname = cells.get(2).getText();//название контакта это текст, поэтому его получаем с помощью getText
+                var lastname = cells.get(1).getText();
                 var checkbox = cells.get(0).findElement(By.name("selected[]")); //найдем чекбокс, который находится внутри элемента td
                 var id = checkbox.getAttribute("value");//получаем идентификатор
-                contacts.add(new ContactData().WithId(id).WithFirstname(firstname));// в список контактов добавляем новый объект
+                contacts.add(new ContactData().WithId(id).WithFirstname(firstname).WithLastname(lastname));// в список контактов добавляем новый объект
             }
         }
             return contacts;

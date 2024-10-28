@@ -48,7 +48,7 @@ public class СontactCreationTests extends TestBase {
         };
         newContacts.sort(compareById);
         var expectedList = new ArrayList<>(oldContacts);//строим копию списка oldContacts
-        expectedList.add(contact.WithId(newContacts.get(newContacts.size()-1).id()).WithMiddlename("").WithNickname("").WithMobile("").WithEmail("").WithFirstname(""));
+        expectedList.add(contact.WithId(newContacts.get(newContacts.size()-1).id()).WithMiddlename("").WithNickname("").WithMobile("").WithEmail(""));
         expectedList.sort(compareById);
         Assertions.assertEquals(newContacts,expectedList);//проверка, которая сравнивает 2 списка ожидаемый и реальный
     }
