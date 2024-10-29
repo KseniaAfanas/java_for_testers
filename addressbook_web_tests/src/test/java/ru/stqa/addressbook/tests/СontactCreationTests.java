@@ -1,8 +1,9 @@
-import model.ContactData;
+package ru.stqa.addressbook.tests;
+
+import ru.stqa.addressbook.model.ContactData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import tests.TestBase;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -18,7 +19,7 @@ public class СontactCreationTests extends TestBase {
                     for (var nickname: List.of("","nickname")) {
                         for (var mobile: List.of("","mobile")) {
                             for (var email: List.of("","email")) {
-                                for (var foto: List.of("","src/test/resources/images/avatar.png")) {
+                                for (var foto: List.of("",randomFile("src/test/resources/images"))) {//List.of("","src/test/resources/images/avatar.png"
                                 result.add(new ContactData().WithFirstname(firstname).WithMiddlename(middlename).WithLastname(lastname).WithNickname(nickname).WithMobile(mobile).WithEmail(email).WithFoto(foto));//добавляем значение в список генерируемых объектов. Идентификаторов пока нет
                         }
                     }
@@ -29,13 +30,13 @@ public class СontactCreationTests extends TestBase {
         }
         for (int i=0; i<5; i++) {
             result.add(new ContactData()
-                    .WithFirstname(randomString(i*10))
+                    .WithFirstname(randomString(i*10))//создание контакта. В качестве наименование будет рандомное randomString длины i*10
                     .WithMiddlename(randomString(i*10))
                     .WithLastname(randomString(i*10))
                     .WithNickname(randomString(i*10))
                     .WithMobile(randomString(i*10))
                     .WithEmail(randomString(i*10))
-                    .WithFoto("src/test/resources/images/avatar.png"));//создание контакта. В качестве наименование будет рандомное randomString длины i*10
+                    .WithFoto(randomFile("src/test/resources/images")));
         }
         return result;
     }

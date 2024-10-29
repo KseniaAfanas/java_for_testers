@@ -1,11 +1,10 @@
-import model.ContactData;
-import model.GroupData;
+package ru.stqa.addressbook.tests;
+
+import ru.stqa.addressbook.model.ContactData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import tests.TestBase;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class ContactRemovalTests extends TestBase {//удаление контакта

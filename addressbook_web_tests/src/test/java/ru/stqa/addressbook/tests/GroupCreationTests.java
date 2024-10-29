@@ -1,6 +1,6 @@
-package tests;
+package ru.stqa.addressbook.tests;
 
-import model.GroupData;
+import ru.stqa.addressbook.model.GroupData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -10,7 +10,7 @@ import java.util.List;
 
 public class GroupCreationTests extends TestBase{
 
-    public static List<GroupData> groupProvider() {//возвращает список строк объектов типа GroupData
+    public static List<GroupData> groupProvider() {//СОЗДАЕМ СПИСОК возвращает список строк объектов типа GroupData
         var result = new ArrayList<GroupData>();
                 for (var name: List.of("","group name")) {//цикл, который перебирает 2 возможных значения для названия группы
             for (var header: List.of("","group header")){//для каждого из этих названий внутри вложенный цикл, который перебирает 2  воможных значения header
@@ -19,7 +19,7 @@ public class GroupCreationTests extends TestBase{
                 }
             }
         }
-        for (int i = 0; i<5; i++) {
+        for (int i = 0; i<5; i++) {//заполняем список в цикле
             result.add(new GroupData()
                     .WithName(randomString(i*10))
                     .WithHeader(randomString(i*10))

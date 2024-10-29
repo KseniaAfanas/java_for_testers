@@ -1,6 +1,5 @@
-package manager;
+package ru.stqa.addressbook.manager;
 
-import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 
 import java.nio.file.Paths;

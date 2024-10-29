@@ -1,10 +1,10 @@
-package tests;
+package ru.stqa.addressbook.tests;
 
-import manager.ApplicationManager;
-import model.ContactData;
+import ru.stqa.addressbook.manager.ApplicationManager;
 import org.junit.jupiter.api.BeforeEach;
-import org.openqa.selenium.By;
 
+import java.io.File;
+import java.nio.file.Paths;
 import java.util.Random;
 
 public class TestBase {//базовый класс для тестов
@@ -23,10 +23,12 @@ var result = "";//пустая строка
 for (int i=0; i<n; i++){
     result=result + (char)('a'+rnd.nextInt(26));// число преобразовать в символ и этот символ прибавить к строке/ nextInt генерирует целочисленные значения. Строки состоят только из букв
 }
-/*if (n<20){
-    result = result + '\''; //экранируем кавычку
-}*///не добавляем больше ' в наименовании группы, который вызывает ошибку
     return result;
 }
-
+public static String randomFile(String dir){//функция которая выбирает случайные файлы взаданной директории. В качестве параметра - путь к директории, возвращает путь к файлу
+    var fileNames=new File(dir).list();//работаем с директорией, в качестве параметра - путь к директории, list вернет наименования файлов. Сохраняем результат в переменную
+    var rnd = new Random(); //выбрать случайный файл из этого списка
+    var index = rnd.nextInt(fileNames.length);//получаем случайное число не превышающее количество файлов
+    return Paths.get(dir,fileNames[index]).toString();//вернуть путь к файлу
+    }
 }
