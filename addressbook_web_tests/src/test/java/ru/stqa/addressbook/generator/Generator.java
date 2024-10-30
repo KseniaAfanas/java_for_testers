@@ -5,11 +5,14 @@ import com.beust.jcommander.Parameter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import ru.stqa.addressbook.common.CommonFunctions;
+import ru.stqa.addressbook.model.ContactData;
 import ru.stqa.addressbook.model.GroupData;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import static ru.stqa.addressbook.tests.TestBase.randomFile;
 
 public class Generator {
     @Parameter(names={"--type", "-t"})//имя type короткое t
@@ -51,7 +54,18 @@ public class Generator {
     }
 
     private Object generateContacts() {
-        return null;//НАПИСАТЬ!!!
+        var result = new ArrayList<ContactData>();//создаем список объектов ContactData
+        for (int i = 0; i<count; i++) {//заполняем список в цикле
+                result.add(new ContactData()
+                        .WithFirstname(CommonFunctions.randomString(i*10))//создание контакта. В качестве наименование будет рандомное randomString длины i*10
+                        .WithMiddlename(CommonFunctions.randomString(i*10))
+                        .WithLastname(CommonFunctions.randomString(i*10))
+                        .WithNickname(CommonFunctions.randomString(i*10))
+                        .WithMobile(CommonFunctions.randomString(i*10))
+                        .WithEmail(CommonFunctions.randomString(i*10))
+                        .WithFoto(randomFile("src/test/resources/images")));
+            }
+        return result;
     }
 
     private Object generateGroups() {

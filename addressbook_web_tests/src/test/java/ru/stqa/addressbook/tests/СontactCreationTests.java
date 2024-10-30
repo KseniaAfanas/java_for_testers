@@ -1,44 +1,42 @@
 package ru.stqa.addressbook.tests;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import ru.stqa.addressbook.common.CommonFunctions;
 import ru.stqa.addressbook.model.ContactData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import ru.stqa.addressbook.model.GroupData;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 public class СontactCreationTests extends TestBase {
 
-    public static List<ContactData> contactProvider() {//возвращает список объектов ContactData
+    public static List<ContactData> contactProvider() throws IOException {//возвращает список объектов ContactData
         var result=new ArrayList<ContactData>();//инициализируем создаваемый список соответствующими значениями
-        for (var firstname: List.of("","firstname")) {//цикл, который перебирает два возможных значния (пустая и НЕ пустая строка)
-            for (var middlename: List.of("","middlename")){//для каждого из этих названий внутри вложенный цикл, который перебирает 2  воможных значения middlename
-                for (var lastname: List.of("","lastname")) {//для каждой пары перебираем возможные значения lastname
-                    for (var nickname: List.of("","nickname")) {
-                        for (var mobile: List.of("","mobile")) {
-                            for (var email: List.of("","email")) {
-                                for (var foto: List.of("",randomFile("src/test/resources/images"))) {//List.of("","src/test/resources/images/avatar.png"
-                                result.add(new ContactData().WithFirstname(firstname).WithMiddlename(middlename).WithLastname(lastname).WithNickname(nickname).WithMobile(mobile).WithEmail(email).WithFoto(foto));//добавляем значение в список генерируемых объектов. Идентификаторов пока нет
-                        }
-                    }
-                    }
-                }
-            }
-        }
-        }
-        for (int i=0; i<5; i++) {
-            result.add(new ContactData()
-                    .WithFirstname(CommonFunctions.randomString(i*10))//создание контакта. В качестве наименование будет рандомное randomString длины i*10
-                    .WithMiddlename(CommonFunctions.randomString(i*10))
-                    .WithLastname(CommonFunctions.randomString(i*10))
-                    .WithNickname(CommonFunctions.randomString(i*10))
-                    .WithMobile(CommonFunctions.randomString(i*10))
-                    .WithEmail(CommonFunctions.randomString(i*10))
-                    .WithFoto(randomFile("src/test/resources/images")));
-        }
+//        for (var firstname: List.of("","firstname")) {//цикл, который перебирает два возможных значния (пустая и НЕ пустая строка)
+//            for (var middlename: List.of("","middlename")){//для каждого из этих названий внутри вложенный цикл, который перебирает 2  воможных значения middlename
+//                for (var lastname: List.of("","lastname")) {//для каждой пары перебираем возможные значения lastname
+//                    for (var nickname: List.of("","nickname")) {
+//                        for (var mobile: List.of("","mobile")) {
+//                            for (var email: List.of("","email")) {
+//                                for (var foto: List.of("",randomFile("src/test/resources/images"))) {//List.of("","src/test/resources/images/avatar.png"
+//                                result.add(new ContactData().WithFirstname(firstname).WithMiddlename(middlename).WithLastname(lastname).WithNickname(nickname).WithMobile(mobile).WithEmail(email).WithFoto(foto));//добавляем значение в список генерируемых объектов. Идентификаторов пока нет
+//                        }
+//                    }
+//                    }
+//                }
+//            }
+//        }
+//        }
+        ObjectMapper mapper = new ObjectMapper();//прочитать данные из файла
+        var value = mapper.readValue(new File("contacts.json"), new TypeReference<List<ContactData>>() {});//TypeReference класс у которого ничего нет, только декларация. Он пустой
+        result.addAll(value);//добавить все значения списка, которые были прочитаны из файла
         return result;
     }
 
