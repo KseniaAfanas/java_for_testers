@@ -7,13 +7,17 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
+import java.util.Properties;
+
 public class ApplicationManager {/* методы для управления тестируемым приложением*/
     protected WebDriver driver;
     private LoginHelper session;
     private GroupHelper groups;
     private ContactHelper contacts;//private используется внутри этого класса
+    private Properties properties;
 
-    public void init(String browser) {
+    public void init(String browser, Properties properties) {
+        this.properties=properties;
         if (driver == null) {
            if ("chrome".equals(browser)){//browser - параметр, который управляет выбором браузера
                 driver = new ChromeDriver();
@@ -23,10 +27,10 @@ public class ApplicationManager {/* методы для управления т�
                 throw new IllegalArgumentException(String.format("Unknown browser %s",browser));//исключение о неизвестном браузере
             }
                         Runtime.getRuntime().addShutdownHook(new Thread(driver::quit));//завершение джава в самом конце
-            driver.get("http://localhost/addressbook/");
+            driver.get(properties.getProperty("web.baseUrl"));
             driver.manage().window().setSize(new Dimension(1920, 1040));
             driver.findElement(By.name("user")).click();
-            session().login("admin", "secret");
+            session().login(properties.getProperty("web.username"), properties.getProperty("web.password"));
         }
     }
 
