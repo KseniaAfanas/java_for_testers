@@ -2,9 +2,13 @@ package ru.stqa.addressbook.generator;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import ru.stqa.addressbook.common.CommonFunctions;
 import ru.stqa.addressbook.model.GroupData;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Generator {
@@ -12,7 +16,7 @@ public class Generator {
     String type;
 
     @Parameter(names={"--output", "-o"})//имя output короткое o
-    String output;
+    String output;//содержится название файла
 
     @Parameter(names={"--format", "-f"})
     String format;
@@ -21,7 +25,7 @@ public class Generator {
     int count;
 
 
-        public static void main (String[] args){//массив строк
+        public static void main (String[] args) throws IOException {//массив строк
         var generator=new Generator();//создаем генератор и сохраняем его в переменную
         JCommander.newBuilder()
                 .addObject(generator)//парсер командной строки
@@ -30,7 +34,7 @@ public class Generator {
         generator.run();//вызываем метод run()
     }
 
-    private void run() {
+    private void run() throws IOException {//декларируем что мб исключение
         var data = generate();
         save(data);
     }
@@ -62,6 +66,11 @@ public class Generator {
     }
 
 
-    private void save(Object data) {
-    }
+    private void save(Object data) throws IOException {//декларируем что мб исключение
+        if ("json".equals(format)){
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.enable(SerializationFeature.INDENT_OUTPUT);
+            mapper.writeValue(new File(output), data);//сохраняем в файл данные, которые находятся в переменной data. В String output содержится название файла
+        }else {throw new IllegalArgumentException("Неизвестный формат данных"+format);}
+            }
 }

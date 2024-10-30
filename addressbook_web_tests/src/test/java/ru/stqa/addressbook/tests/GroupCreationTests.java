@@ -1,31 +1,33 @@
 package ru.stqa.addressbook.tests;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import ru.stqa.addressbook.common.CommonFunctions;
 import ru.stqa.addressbook.model.GroupData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 public class GroupCreationTests extends TestBase{
 
-    public static List<GroupData> groupProvider() {//СОЗДАЕМ СПИСОК возвращает список строк объектов типа GroupData
+    public static List<GroupData> groupProvider() throws IOException {//СОЗДАЕМ СПИСОК возвращает список строк объектов типа GroupData
         var result = new ArrayList<GroupData>();
-                for (var name: List.of("","group name")) {//цикл, который перебирает 2 возможных значения для названия группы
-            for (var header: List.of("","group header")){//для каждого из этих названий внутри вложенный цикл, который перебирает 2  воможных значения header
-                for (var footer: List.of("","group footer")) {//для каждой пары перебираем возможные значения footer
-                    result.add(new GroupData().WithName(name).WithHeader(header).WithFooter(footer));//добавляем значение в список генерируемых объектов. Идентификаторов пока нет
-                }
-            }
-        }
-        for (int i = 0; i<5; i++) {//заполняем список в цикле
-            result.add(new GroupData()
-                    .WithName(CommonFunctions.randomString(i*10))
-                    .WithHeader(CommonFunctions.randomString(i*10))
-                    .WithFooter(CommonFunctions.randomString(i*10)));//В список будет добавляться обьекты типа GroupData со случайно сгенерированным name,heder,footer
-        }
+//                for (var name: List.of("","group name")) {//цикл, который перебирает 2 возможных значения для названия группы
+//            for (var header: List.of("","group header")){//для каждого из этих названий внутри вложенный цикл, который перебирает 2  воможных значения header
+//                for (var footer: List.of("","group footer")) {//для каждой пары перебираем возможные значения footer
+//                    result.add(new GroupData().WithName(name).WithHeader(header).WithFooter(footer));//добавляем значение в список генерируемых объектов. Идентификаторов пока нет
+//                }
+//            }
+//        }
+        ObjectMapper mapper = new ObjectMapper();//прочитать данные из файла
+        var value = mapper.readValue(new File("groups.json"), new TypeReference<List<GroupData>>() {});//TypeReference класс у которого ничего нет, только декларация. Он пустой
+        result.addAll(value);//добавить все значения списка, которые были прочитаны из файла
         return result;
     }
 
