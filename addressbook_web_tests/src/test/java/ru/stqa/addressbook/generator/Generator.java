@@ -9,6 +9,7 @@ import ru.stqa.addressbook.model.ContactData;
 import ru.stqa.addressbook.model.GroupData;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -84,7 +85,15 @@ public class Generator {
         if ("json".equals(format)){
             ObjectMapper mapper = new ObjectMapper();
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
-            mapper.writeValue(new File(output), data);//сохраняем в файл данные, которые находятся в переменной data. В String output содержится название файла
-        }else {throw new IllegalArgumentException("Неизвестный формат данных"+format);}
+            var json=mapper.writeValueAsString(data);
+
+            try (var writer=new FileWriter(output)){//значение переменной записываем в файл output.Внутри блока try (инициализация переменной)
+                writer.write(json);// пишем в файл строку
+            }//автоматически вызван метод close, файл закрыт
+
+            //было раньше mapper.writeValue(new File(output), data);//сохраняем в файл данные, которые находятся в переменной data. В output содержится название файла
+        }else {
+            throw new IllegalArgumentException("Неизвестный формат данных"+format);
+        }
             }
 }

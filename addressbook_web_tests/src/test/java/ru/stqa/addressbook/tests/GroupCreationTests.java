@@ -10,6 +10,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -25,8 +27,9 @@ public class GroupCreationTests extends TestBase{
 //                }
 //            }
 //        }
+        var json= Files.readString(Paths.get("groups.json"));//читаем содержимое всего файла за один вызов
         ObjectMapper mapper = new ObjectMapper();//прочитать данные из файла
-        var value = mapper.readValue(new File("groups.json"), new TypeReference<List<GroupData>>() {});//TypeReference класс у которого ничего нет, только декларация. Он пустой
+        var value = mapper.readValue(json, new TypeReference<List<GroupData>>() {});//var value = mapper.readValue(new File("groups.json"), new TypeReference<List<GroupData>>() {});TypeReference класс у которого ничего нет, только декларация. Он пустой
         result.addAll(value);//добавить все значения списка, которые были прочитаны из файла
         return result;
     }
@@ -64,49 +67,3 @@ expectedList.sort(compareById);//сортируем ожидаемый спис�
         Assertions.assertEquals(newGroups, oldGroups);//проверяем, что количество групп не изменяется
     }
 }
-
-    /*
-     @Test
-    public void CanCreateGroupWithEmptyName() {app.groups().createGroup(new GroupData());}
-
-        @Test
-    public void CanCreateGroupWithNameOnly() {app.groups().createGroup(new GroupData().WithName("some name"));}
-
-    @Test
-    public void CanCreateGroup() {//создаем одну группу в адресной книге. Не параметризован
-        int groupCount = app.groups().getCount();//класс помщник для получения количества групп
-       app.groups().createGroup(new GroupData("group name", "group header", "group footer"));//создание группы
-        int newGroupCount = app.groups().getCount();
-        Assertions.assertEquals(groupCount+1, newGroupCount);
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"group name","group name'"})//фиксированные значения строк можно использовать
-    public void CanCreateGroup(String name) {//создаем одну группу в адресной книге. Имя группы name будет параметром
-        int groupCount = app.groups().getCount();//класс помщник для получения количества групп
-       app.groups().createGroup(new GroupData(name, "group header", "group footer"));//создание группы, имя группы - параметр
-        int newGroupCount = app.groups().getCount();
-        Assertions.assertEquals(groupCount+1, newGroupCount);
-    }
-    @Test
-    public void CanCreateMultipleGroups() {//создаем несколько групп со случайным наименованием в адресной книге
-        int n=5;
-        int groupCount = app.groups().getCount();//класс помощник для получения количества групп
-for (int i=0; i<n; i++) {
-    app.groups().createGroup(new GroupData(randomString(i*10), "group header", "group footer"));//создание группы. В качестве наименование будет рандомное randomString длины i*10
-}
-                int newGroupCount = app.groups().getCount();//получаем новое значение
-        Assertions.assertEquals(groupCount+n, newGroupCount);//новое значение должно быть больше на n
-    }
-
-    @ParameterizedTest
-    @MethodSource ("groupNameProvider")
-    public void CanCreateMultipleGroups(String name) {//создается одна группа с указанным именем
-        int groupCount = app.groups().getCount();//класс помощник для получения количества групп
-    app.groups().createGroup(new GroupData(name, "group header", "group footer"));//создание группы. В качестве наименование будет рандомное randomString длины i*10
-        int newGroupCount = app.groups().getCount();//получаем новое значение
-        Assertions.assertEquals(groupCount+1, newGroupCount);//проверяем что создана одна новая группа
-    }
-
-
-    */
