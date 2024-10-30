@@ -1,5 +1,6 @@
 package ru.stqa.addressbook.tests;
 
+import ru.stqa.addressbook.common.CommonFunctions;
 import ru.stqa.addressbook.model.ContactData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -30,12 +31,12 @@ public class СontactCreationTests extends TestBase {
         }
         for (int i=0; i<5; i++) {
             result.add(new ContactData()
-                    .WithFirstname(randomString(i*10))//создание контакта. В качестве наименование будет рандомное randomString длины i*10
-                    .WithMiddlename(randomString(i*10))
-                    .WithLastname(randomString(i*10))
-                    .WithNickname(randomString(i*10))
-                    .WithMobile(randomString(i*10))
-                    .WithEmail(randomString(i*10))
+                    .WithFirstname(CommonFunctions.randomString(i*10))//создание контакта. В качестве наименование будет рандомное randomString длины i*10
+                    .WithMiddlename(CommonFunctions.randomString(i*10))
+                    .WithLastname(CommonFunctions.randomString(i*10))
+                    .WithNickname(CommonFunctions.randomString(i*10))
+                    .WithMobile(CommonFunctions.randomString(i*10))
+                    .WithEmail(CommonFunctions.randomString(i*10))
                     .WithFoto(randomFile("src/test/resources/images")));
         }
         return result;

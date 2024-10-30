@@ -1,5 +1,6 @@
 package ru.stqa.addressbook.tests;
 
+import ru.stqa.addressbook.common.CommonFunctions;
 import ru.stqa.addressbook.model.GroupData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -21,9 +22,9 @@ public class GroupCreationTests extends TestBase{
         }
         for (int i = 0; i<5; i++) {//заполняем список в цикле
             result.add(new GroupData()
-                    .WithName(randomString(i*10))
-                    .WithHeader(randomString(i*10))
-                    .WithFooter(randomString(i*10)));//В список будет добавляться обьекты типа GroupData со случайно сгенерированным name,heder,footer
+                    .WithName(CommonFunctions.randomString(i*10))
+                    .WithHeader(CommonFunctions.randomString(i*10))
+                    .WithFooter(CommonFunctions.randomString(i*10)));//В список будет добавляться обьекты типа GroupData со случайно сгенерированным name,heder,footer
         }
         return result;
     }
