@@ -15,6 +15,7 @@ public class ApplicationManager {/* методы для управления т�
     private GroupHelper groups;
     private ContactHelper contacts;//private используется внутри этого класса
     private Properties properties;
+    private JdbcHelper jdbc;
 
     public void init(String browser, Properties properties) {
         this.properties=properties;
@@ -53,6 +54,13 @@ public class ApplicationManager {/* методы для управления т�
             contacts = new ContactHelper(this);
         }
         return contacts;
+    }
+
+    public JdbcHelper jdbc() {//инициалиация помощника при обращении к нему
+        if (jdbc == null) {
+            jdbc = new JdbcHelper(this);
+        }
+        return jdbc;
     }
 
     protected boolean isElementPresent(By locator) {

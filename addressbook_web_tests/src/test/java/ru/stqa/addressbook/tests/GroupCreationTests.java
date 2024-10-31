@@ -34,22 +34,32 @@ public class GroupCreationTests extends TestBase{
         return result;
     }
 
+    public static List<GroupData> singleRandomGroup() {
+        return List.of(new GroupData()
+                .WithName(CommonFunctions.randomString(10))
+                .WithHeader(CommonFunctions.randomString(20))
+                .WithFooter(CommonFunctions.randomString(30)));
+
+    }
+
     @ParameterizedTest
-    @MethodSource ("groupProvider")//метод который создает группы
-    public void CanCreateMultipleGroups(GroupData group) {//создается одна группа со сгенерированным наименованием, header и footer
-        var oldGroups = app.groups().getList();//функция, которая возвращает старый список обектов типа GroupData
+    @MethodSource ("singleRandomGroup")//метод который создает группы
+    public void CanCreateGroup(GroupData group) {//создается одна группа со сгенерированным наименованием, header и footer
+        var oldGroups = app.jdbc().getGroupList();//функция, которая возвращает старый список обектов типа GroupData
     app.groups().createGroup(group);//создаём группу, которая передается в качестве параметра в тестируемую функцию
-        var newGroups = app.groups().getList();//новый список групп отсортирован по названиям, которые получились после модификации
+        var newGroups = app.jdbc().getGroupList();//новый список групп отсортирован по названиям, которые получились после модификации
         Comparator<GroupData> compareById = (o1, o2) -> {
             return Integer.compare(Integer.parseInt(o1.id()), Integer.parseInt(o2.id()));//сравниваем идентификаторы групп, они не числа, а строки
         };
         newGroups.sort(compareById);//в метод сорт передаем компаратор, который сравнивает 2 объекта и отвечает какой больше, а какой меньше: 1й больше возвращает 1, 2й больше возвращает -1, если равны 0
+var maxID =newGroups.get(newGroups.size()-1).id();//максимальный из существующих идентификаторов
 
         var expectedList = new ArrayList<>(oldGroups);//ожидаемый список построен из старого списка oldGroups отсортирован по названиям, которые были ДО модификации
-expectedList.add(group.WithId(newGroups.get(newGroups.size()-1).id()).WithHeader("").WithFooter(""));
-//созданная группа будет иметь такой же идентификатор, как у последнего элемента в списке newGroups. Сравниваем только имена и идентификаторы, НО перед сортировкой вписываем пустой хедер и футер, чтобы тест проходил успешно
+expectedList.add(group.WithId(maxID));
+//созданная группа будет иметь такой же идентификатор, как у последнего элемента в списке newGroups.
 expectedList.sort(compareById);//сортируем ожидаемый список
         Assertions.assertEquals(newGroups,expectedList);//проверка, которая сравнивает 2 списка ожидаемый и реальный
+        //var newUiGroups=app.groups().getList();//СПИСОК НА ui
 
     }
     public static List<GroupData> negativeGroupProvider() {//возвращает список строк объектов типа GroupData
