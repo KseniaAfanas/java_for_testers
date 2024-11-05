@@ -45,8 +45,9 @@ public class HibernateHelper extends HelperBase{
     }
 
     private static ContactData convert(ContactRecord record) {
-        return new ContactData(""+record.id, record.middlename, record.lastname, record.nickname, record.mobile, record.email, record.firstname,"");
+        return new ContactData(""+record.id, record.middlename, record.lastname, record.nickname, record.mobile, record.email, record.firstname, record.photo);
     }
+
 
 public List<GroupData> getGroupList() {
         return convertList(sessionFactory.fromSession(session -> {//функция обратится к БД и вернет результат.Функция выполняется в контексте сессии, которая автоматически открывается и закрывается

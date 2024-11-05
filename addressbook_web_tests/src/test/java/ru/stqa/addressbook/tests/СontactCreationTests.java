@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import static ru.stqa.addressbook.tests.TestBase.app;
+
 public class СontactCreationTests extends TestBase {
 
     public static List<ContactData> contactProvider() throws IOException {//возвращает список объектов ContactData
@@ -40,29 +42,43 @@ public class СontactCreationTests extends TestBase {
         return result;
     }
 
+    public static List<ContactData> singleRandomContact() {
+       return List.of(new ContactData()
+               .WithMiddlename(CommonFunctions.randomString(20))
+               .WithLastname(CommonFunctions.randomString(30))
+               .WithNickname(CommonFunctions.randomString(10))
+               .WithMobile(CommonFunctions.randomString(10))
+               .WithEmail(CommonFunctions.randomString(10))
+               .WithFirstname(CommonFunctions.randomString(10))
+               //.WithFoto(randomFile("src/test/resources/images")));
+               .WithFoto(""));
+    }
+
+   public static List<ContactData> negativeContactProvider() {//возвращает список объектов ContactData
+        var result=new ArrayList<ContactData>(List.of(
+                new ContactData ("", "", "", "", "", "","firstname'", "")));//инициализируем создаваемый список соответствующими значениями
+        return result;
+    }
+
+
     @ParameterizedTest
-    @MethodSource("contactProvider")//провайдер тестовых данных, который генерирует данные с фикс значениями или сгенерированными
-       public void CanCreateMultipleContacts(ContactData contact) {//создаем несколько контактов со случайным наименованием в адресной книге
-        var oldContacts = app.contacts().getList();//класс помощник для получения списка контактов
+    @MethodSource("singleRandomContact")//провайдер тестовых данных, который генерирует данные с фикс значениями или сгенерированными
+    public void CanCreateContacts(ContactData contact) {//создаем несколько контактов со случайным наименованием в адресной книге
+        var oldContacts = app.jdbc().getContactList();//класс помощник для получения списка контактов
         app.contacts().createContact(contact);//создание контакта. В качестве наименование будет рандомное randomString длины i*10
-        var newContacts = app.contacts().getList();
+        var newContacts = app.jdbc().getContactList();
         Comparator<ContactData> compareById = (o1, o2) -> {
             return Integer.compare(Integer.parseInt(o1.id()), Integer.parseInt(o2.id()));//сравниваем идентификаторы контактов, они не числа, а строки
         };
         newContacts.sort(compareById);
+        var maxID =newContacts.get(newContacts.size()-1).id();//максимальный из существующих идентификаторов
         var expectedList = new ArrayList<>(oldContacts);//строим копию списка oldContacts
-        expectedList.add(contact.WithId(newContacts.get(newContacts.size()-1).id()).WithMiddlename("").WithNickname("").WithMobile("").WithEmail("").WithFoto(""));
+        expectedList.add(contact.WithId(maxID));
         expectedList.sort(compareById);
         Assertions.assertEquals(newContacts,expectedList);//проверка, которая сравнивает 2 списка ожидаемый и реальный
     }
 
-    public static List<ContactData> negativeContactProvider() {//возвращает список объектов ContactData
-        var result=new ArrayList<ContactData>(List.of(
-                new ContactData ("", "", "", "", "", "","firstname'", "")));//инициализируем создаваемый список соответствующими значениями
-                return result;
-    }
-
-    @ParameterizedTest
+   @ParameterizedTest
     @MethodSource ("negativeContactProvider")//метод который создает контакт с апострофом (всегда падает, поэтому выделяем отдельно)
     public void CanNotContact(ContactData contact) {//НЕ создается контакт с заданными параметрами
         var oldContacts = app.contacts().getList();//класс помощник для получения списка контактов;
@@ -70,5 +86,7 @@ public class СontactCreationTests extends TestBase {
         var newContacts = app.contacts().getList();//получаем новое значение
         Assertions.assertEquals(newContacts, oldContacts);//проверяем, что количество контактов не изменяется
     }
-
 }
+
+
+

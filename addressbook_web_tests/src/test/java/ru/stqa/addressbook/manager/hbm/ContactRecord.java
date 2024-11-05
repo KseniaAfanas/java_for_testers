@@ -20,6 +20,7 @@ public class ContactRecord {
     public String mobile;
 
     public String email;
+    public String photo;
 }
 
 

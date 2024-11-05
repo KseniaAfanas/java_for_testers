@@ -1,5 +1,7 @@
 package ru.stqa.addressbook.manager;
 
+import ru.stqa.addressbook.common.CommonFunctions;
+import ru.stqa.addressbook.model.ContactData;
 import ru.stqa.addressbook.model.GroupData;
 
 import java.sql.DriverManager;
@@ -30,4 +32,29 @@ public class JdbcHelper extends HelperBase{//помощник для работ�
         }
         return groups;//возвращаем список полученный из БД
     }
+
+    public List<ContactData> getContactList() {
+        var contacts=new ArrayList<ContactData>();//создаем пусто список
+        try (var conn = DriverManager.getConnection("jdbc:mysql://localhost/addressbook","root","");
+             var statement=conn.createStatement();//устанавливаем соединение с БД
+             var result = statement.executeQuery("SELECT id,middlename,lastname, nickname,mobile, email, firstname, photo FROM addressbook"))//запрос инфо из БД
+
+        {
+            while (result.next()){//пока результаты не кончились
+                contacts.add(new ContactData()
+                        .WithId(result.getString("id"))
+                        .WithMiddlename(result.getString("middlename"))
+                        .WithLastname(result.getString("lastname"))
+                        .WithNickname(result.getString("nickname"))
+                        .WithMobile(result.getString("mobile"))
+                        .WithEmail(result.getString("email"))
+                        .WithFirstname(result.getString("firstname"))
+                        .WithFoto(""));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return contacts;//возвращаем список полученный из БД
+    }
+
 }
