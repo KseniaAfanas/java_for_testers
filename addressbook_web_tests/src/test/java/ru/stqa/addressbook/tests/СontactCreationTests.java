@@ -2,6 +2,7 @@ package ru.stqa.addressbook.tests;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Test;
 import ru.stqa.addressbook.common.CommonFunctions;
 import ru.stqa.addressbook.model.ContactData;
 import org.junit.jupiter.api.Assertions;
@@ -86,6 +87,34 @@ public class СontactCreationTests extends TestBase {
         var newContacts = app.contacts().getList();//получаем новое значение
         Assertions.assertEquals(newContacts, oldContacts);//проверяем, что количество контактов не изменяется
     }
+
+    @Test
+    void CanCreateContact() {//можно создать контакт не включенный в группу
+        var contact = new ContactData()
+                .WithLastname(CommonFunctions.randomString(10))
+                .WithFirstname(CommonFunctions.randomString(10))
+                .WithFoto(randomFile("src/test/resources/images"));
+        app.contacts().create(contact);
+
+    }
+    @Test
+    void CanCreateContactInGroup() {//можно создать контакт, который включен в группу
+        var contact = new ContactData()
+                .WithLastname(CommonFunctions.randomString(10))
+                .WithFirstname(CommonFunctions.randomString(10))
+        .WithFoto(randomFile("src/test/resources/images"));
+        if (app.hbm().getGroupCount()==0) {//проверяем наличие группы путем подсчета, если количество=0, то группы нет. Раньше тут был isGroupPresent (проверял наличие хотя бы одной группы)
+            app.hbm().createGroup(new GroupData("", "group header", "group footer", "group name"));
+        }
+        var group = app.hbm().getGroupList().get(0);//получаем список групп и выбираем первую из них
+
+        var oldRelated = app.hbm().getContactsInGroup(group);//проверяем какие контакты уже были включены в эту группу ДО выполнения тестируемой операции
+        app.contacts().create(contact,group);//создаем контакт
+        var newRelated = app.hbm().getContactsInGroup(group);//загружаем новый список
+Assertions.assertEquals(oldRelated.size()+1,newRelated.size());//проверяем, что новый список содержит на один элемент больше, чем старый
+        //сделать проверку, котороя сравнивает содержимое списков (так же как сравниваются полные списки контактов/групп после создания)
+    }
+
 }
 
 

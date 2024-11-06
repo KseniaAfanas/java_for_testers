@@ -1,11 +1,9 @@
 package ru.stqa.addressbook.manager.hbm;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table (name="group_list")
@@ -22,8 +20,18 @@ public String name;
     public String footer;
     public Date deprecated = new Date();
 
-public GroupRecord(){//конструктор который принимает нулевой набор параметров
+
+    @ManyToMany()//указываем тип связи
+    @JoinTable(name="address_in_groups",
+            joinColumns = @JoinColumn(name="group_id"),
+            inverseJoinColumns = @JoinColumn(name="id"))//таблица связей, joinColumns указывает на группу, inverseJoinColumns указывает на контакты
+
+    public List<ContactRecord> contacts;//свойство описывает связь с объектами типа ContactRecord
+
+
+    public GroupRecord(){//конструктор который принимает нулевой набор параметров
 }
+
 public GroupRecord(int id, String name, String header, String footer){//конструктор который принимает все параметры
     this.id = id;
     this.name = name;

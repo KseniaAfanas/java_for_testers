@@ -19,7 +19,7 @@ public class HibernateHelper extends HelperBase{
                         //.addAnnotatedClass(Book.class)
                 .addAnnotatedClass(GroupRecord.class)
                 .addAnnotatedClass(ContactRecord.class)
-                        .setProperty(AvailableSettings.URL, "jdbc:mysql://localhost/addressbook")
+                        .setProperty(AvailableSettings.URL, "jdbc:mysql://localhost/addressbook?zeroDateTimeBehavior=convertToNull")//добавили zeroDateTimeBehavior=convertToNull чтобы нулевые даты игнорировались
                         .setProperty(AvailableSettings.USER, "root")
                         .setProperty(AvailableSettings.PASS, "")
                         .buildSessionFactory();
@@ -44,7 +44,7 @@ public class HibernateHelper extends HelperBase{
         return new GroupRecord(Integer.parseInt(id), data.name(), data.header(), data.footer());//преобразовываем идентификатор из строки в число
     }
 
-    static List <ContactData> convertList1 (List<ContactRecord> records){//функция, которая преобразовывает список объектов одного типа в список объектов друго типа
+    static List <ContactData> convertContactList (List<ContactRecord> records){//функция, которая преобразовывает список объектов одного типа в список объектов друго типа
         List<ContactData> result = new ArrayList<>();
         for (var record:records){
             result.add(convert(record));
@@ -71,7 +71,7 @@ return session.createQuery("from GroupRecord", GroupRecord.class).list();//вн�
         }));
 }
     public List<ContactData> getContactList() {
-        return convertList1(sessionFactory.fromSession(session -> {//функция обратится к БД и вернет результат.Функция выполняется в контексте сессии, которая автоматически открывается и закрывается
+        return convertContactList(sessionFactory.fromSession(session -> {//функция обратится к БД и вернет результат.Функция выполняется в контексте сессии, которая автоматически открывается и закрывается
             return session.createQuery("from ContactRecord", ContactRecord.class).list();//внутренняя функция
         }));
     }
@@ -103,4 +103,13 @@ sessionFactory.inSession(session -> {
             session.getTransaction().commit();//закрываем транзакцию
         });
 }
+
+    public List<ContactData> getContactsInGroup(GroupData group) {
+        return sessionFactory.fromSession(session -> {//получаем информацию о контактах
+            return convertContactList(session.get(GroupRecord.class, group.id()).contacts);//запрос к БД, который по идентификатору группы находит все контакты, которые в эту группу включены.
+            // Получить объект по идентификатору
+            //перенесли конвертацию внутрь сессии, чтобы можно было получить информацию о связях (она в последнюю очередб)
+        });
+
+    }
 }

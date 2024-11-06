@@ -1,7 +1,9 @@
 package ru.stqa.addressbook.manager;
 
+import org.openqa.selenium.support.ui.Select;
 import ru.stqa.addressbook.model.ContactData;
 import org.openqa.selenium.By;
+import ru.stqa.addressbook.model.GroupData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -132,4 +134,24 @@ public class ContactHelper extends HelperBase{
         }
             return contacts;
     }
+
+    public void create(ContactData contact) {//метод для создания контакта как в лекции 6.4
+        initContactCreation();//открыть форму с новым контактом
+            fillContactForm(contact);//изменить данные по контакту
+            submitContactCreation();//сохранение данных по контакту
+            returnToHomePage();//вернуться на станицу с контактами
+        }
+
+public void create(ContactData contact, GroupData group) {//метод для создания контакта как в лекции 6.4+выбор группы из выпадающего списка
+    initContactCreation();//открыть форму с новым контактом
+    fillContactForm(contact);//изменить данные по контакту
+    selectGroup(group);//выбор группы
+    submitContactCreation();//сохранение данных по контакту
+    returnToHomePage();//вернуться на станицу с контактами
+}
+
+    private void selectGroup(GroupData group) {
+        new Select(manager.driver.findElement(By.name("new_group"))).selectByValue(group.id());//находим на странице нужный элемент
     }
+
+}
