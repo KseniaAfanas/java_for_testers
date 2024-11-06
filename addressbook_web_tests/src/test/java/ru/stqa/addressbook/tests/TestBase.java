@@ -1,5 +1,6 @@
 package ru.stqa.addressbook.tests;
 
+import org.junit.jupiter.api.AfterEach;
 import ru.stqa.addressbook.manager.ApplicationManager;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -22,6 +23,13 @@ public class TestBase {//базовый класс для тестов
             app = new ApplicationManager();
             app.init(System.getProperty("browser","chrome"),properties);// будет использовано либо значение свой-ва browser, либо chrome/firefox (дефолтное)
         }
+    }
+
+    @AfterEach//будет выполняться после каждого теста
+    void checkDatabaseConsistency(){//проверяем согласованность БД
+        app.jdbc().checkConsistency();
+
+
     }
 
     public static String randomFile(String dir){//функция которая выбирает случайные файлы взаданной директории. В качестве параметра - путь к директории, возвращает путь к файлу

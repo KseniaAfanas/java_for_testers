@@ -57,4 +57,17 @@ public class JdbcHelper extends HelperBase{//помощник для работ�
         return contacts;//возвращаем список полученный из БД
     }
 
+    public void checkConsistency() {//ничего не возвращает, а выбрасывает исключение, если возникли какие-то проблемы
+        //проверяем вернулся ли какой-нибудь результат из соотвествующего select. Если ДА, то БЕДА)
+        try (var conn = DriverManager.getConnection("jdbc:mysql://localhost/addressbook","root","");
+             var statement=conn.createStatement();//устанавливаем соединение с БД
+             var result = statement.executeQuery("SELECT * FROM address_in_groups ag LEFT JOIN addressbook ab ON ab.id=ag.id WHERE ab.id IS NULL"))//запрос инфо из БД
+        {
+if (result.next()){//если список результатов НЕ пустой
+    throw new IllegalStateException("DB is corrupted");//БД повреждена
+}
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
