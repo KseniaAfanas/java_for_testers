@@ -27,6 +27,10 @@ public class ContactHelper extends HelperBase{
             }
         }
 
+    public void refreshContactPresent() {//открыть страницу со списком контактов
+        click(By.linkText("home"));
+    }
+
         public void createContact(ContactData contact) {//метод для создания контакта
             openContactPage();//открыть страницу с контактами
             initContactCreation();//открыть форму с новым контактом

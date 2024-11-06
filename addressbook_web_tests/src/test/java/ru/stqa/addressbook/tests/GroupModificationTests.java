@@ -12,15 +12,15 @@ public class GroupModificationTests extends TestBase{
 
 @Test
     void canModifyGroup() {
-            if (app.groups().getCount()==0) {//проверяем наличие группы. Раньше было так if (!app.groups().isGroupPresent())
-        app.groups().createGroup(new GroupData("", "group header", "group footer", "group name"));//создаем группу
+    if (app.hbm().getGroupCount()==0) {//проверяем наличие группы путем подсчета, если количество=0, то группы нет. Раньше тут был isGroupPresent (проверял наличие хотя бы одной группы)
+        app.hbm().createGroup(new GroupData("", "group header", "group footer", "group name"));
     }
-    var oldGroups = app.groups().getList();//функция, которая возвращает список обектов типа GroupData
+    var oldGroups = app.hbm().getGroupList();//функция, которая возвращает список обектов типа GroupData
     var rnd=new Random();
     var index = rnd.nextInt(oldGroups.size()); //в старом списке выбираем обьект, который будет соотвествовать удаляемой группе и для этого используем генератор случайных чисел
     var testData = new GroupData().WithName("modified name");
     app.groups().modifyGroup(oldGroups.get(index), testData);//1й параметр - группа, которую хотим модифицировать, 2й параметр - данные, которыми будет заполняться форма при модификации
-    var newGroups = app.groups().getList();//новый список групп отсортирован по названиям, которые получились после модификации
+    var newGroups = app.hbm().getGroupList();//новый список групп отсортирован по названиям, которые получились после модификации
     var expectedList = new ArrayList<>(oldGroups);//ожидаемый список построен из старого списка oldGroups отсортирован по названиям, которые были ДО модификации
     expectedList.set(index,testData.WithId(oldGroups.get(index).id()));//oldGroups.get(index) идентификатор той группы, которую модифицировали
     Comparator<GroupData> compareById = (o1, o2) -> {
