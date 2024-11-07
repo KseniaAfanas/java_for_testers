@@ -23,11 +23,54 @@ public class ContactHelper extends HelperBase{
         }
     }
 
-        public void openContactPresent() {//открыть страницу со списком контактов
-            if (manager.isElementPresent(By.xpath("(//input[@name=\'Delete\'])"))) { //если на странице есть кнопка Delete, то никакой переход делать не требуется
-                click(By.linkText("home"));
-            }
+    public void openContactPresent() {//открыть страницу со списком контактов
+        if (manager.isElementPresent(By.xpath("(//input[@name=\'Delete\'])"))) { //если на странице есть кнопка Delete, то никакой переход делать не требуется
+            click(By.linkText("home"));
         }
+    }
+
+    private void addToSelectedContacts() {//добавление выбранного контакта в выбранную группу
+        click(By.xpath("//input[@name=\'add\']"));
+    }
+
+    private void selectGroupHome(GroupData group) { // выбор группы на странице home
+        new Select(manager.driver.findElement(By.name("to_group"))).selectByValue(group.id());//находим на странице нужный элемент
+        //click(By.cssSelector(String.format("input[value='%s']",group.id())));// выбор контакта
+    }
+    public List<ContactData> cleanPhoto(List<ContactData> contacts) { // зачистка фото
+        List<ContactData> newContacts = new ArrayList<>();
+        for(ContactData cd : contacts)
+            newContacts.add(cd.WithFoto(""));
+        return newContacts;
+    }
+
+    public boolean checkContactFromGroup(List<ContactData> contacts, ContactData contact) { // проверить, есть ли в списке нужный контакт
+        for(ContactData cd : contacts)
+            if (cd.id().equals(contact.id())) return true;
+        return false;
+    }
+
+    public void addContactInGroup(ContactData contact, GroupData group) { // добавление контакта в группу через UI
+        openContactPresent();       //открыть страницу со списком контактов
+        selectContact(contact);     //выбрать контакт (отметить галочкой)
+        selectGroupHome(group);     //выбрать группу
+        addToSelectedContacts();    //добавить выбранный контакт в выбранную группу
+    }
+
+    public void removeContactInGroup(ContactData contact, GroupData group) { // удаление контакта из группы через UI
+        openContactPresent();       //открыть страницу со списком контактов
+        selectGroupHomeUP(group);   //выбрать группу вверху страницы
+        selectContact(contact);     //выбрать контакт (отметить галочкой)
+        removeContactsfrom();       //нажать кнопку "Remove from..."
+    }
+
+    private void selectGroupHomeUP(GroupData group) { // выбор группы на странице home ВВЕРХУ
+        new Select(manager.driver.findElement(By.name("group"))).selectByValue(group.id());//находим на странице нужный элемент
+    }
+
+    private void removeContactsfrom() { //удаление контакта из группы
+        click(By.xpath("//input[@name=\'remove\']"));
+    }
 
     public void refreshContactPresent() {//открыть страницу со списком контактов
         click(By.linkText("home"));
@@ -137,12 +180,12 @@ public class ContactHelper extends HelperBase{
 
     public void create(ContactData contact) {//метод для создания контакта как в лекции 6.4
         initContactCreation();//открыть форму с новым контактом
-            fillContactForm(contact);//изменить данные по контакту
-            submitContactCreation();//сохранение данных по контакту
-            returnToHomePage();//вернуться на станицу с контактами
-        }
+        fillContactForm(contact);//изменить данные по контакту
+        submitContactCreation();//сохранение данных по контакту
+        returnToHomePage();//вернуться на станицу с контактами
+    }
 
-public void create(ContactData contact, GroupData group) {//метод для создания контакта как в лекции 6.4+выбор группы из выпадающего списка
+public void create(ContactData contact, GroupData group) {//метод для включения контакта как в лекции 6.4+выбор группы из выпадающего списка
     initContactCreation();//открыть форму с новым контактом
     fillContactForm(contact);//изменить данные по контакту
     selectGroup(group);//выбор группы

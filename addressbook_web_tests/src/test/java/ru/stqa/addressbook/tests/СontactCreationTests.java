@@ -15,8 +15,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import ru.stqa.addressbook.manager.ApplicationManager;
 
 import static ru.stqa.addressbook.tests.TestBase.app;
+import static ru.stqa.addressbook.tests.TestBase.randomFile;
 
 public class СontactCreationTests extends TestBase {
 
@@ -89,7 +91,7 @@ public class СontactCreationTests extends TestBase {
     }
 
     @Test
-    void CanCreateContact() {//можно создать контакт не включенный в группу
+    void CanCreateContact() {//создать контакт не включенный в группу
         var contact = new ContactData()
                 .WithLastname(CommonFunctions.randomString(10))
                 .WithFirstname(CommonFunctions.randomString(10))
@@ -98,7 +100,7 @@ public class СontactCreationTests extends TestBase {
 
     }
     @Test
-    void CanCreateContactInGroup() {//можно создать контакт, который включен в группу
+    void CanCreateContactInGroup() {//создать контакт, который включен в группу
         var contact = new ContactData()
                 .WithLastname(CommonFunctions.randomString(10))
                 .WithFirstname(CommonFunctions.randomString(10))
@@ -115,7 +117,53 @@ Assertions.assertEquals(oldRelated.size()+1,newRelated.size());//проверя�
         //сделать проверку, котороя сравнивает содержимое списков (так же как сравниваются полные списки контактов/групп после создания)
     }
 
+@Test
+public void CanInsertContactInGroup() {//включить контакт в группу через UI и проверками в БД
+    if (app.hbm().getContactCount()==0) { //проверяем в БД, если контакта нет, то
+        var contact = new ContactData()//создаем нового обьекта через UI
+                .WithLastname(CommonFunctions.randomString(10))
+                .WithFirstname(CommonFunctions.randomString(10))
+                .WithFoto(randomFile("src/test/resources/images"));
+        app.contacts().create(contact);//создане контакта через UI
+    }
+    if (app.hbm().getGroupCount()==0) {//проверяем наличие группы путем подсчета, если количество=0, то группы нет. Раньше тут был isGroupPresent (проверял наличие хотя бы одной группы)
+        var group = new GroupData()
+                .WithName(CommonFunctions.randomString(10))
+                .WithHeader(CommonFunctions.randomString(20))
+                .WithFooter(CommonFunctions.randomString(30));
+        app.groups().createGroup(group);//создаём групп через UI
+    }
+    app.contacts().refreshContactPresent();   // перейдём на страницу, на кототой можно выбрать контакт
+    var contact = app.contacts().getList().get(0); // получим список всех контактов через UI и выбираем первый
+    var group = app.groups().getList().get(0); // получим списсок всех групп через UI и выбираем первую
+
+    var oldRelated = app.hbm().getContactsInGroup(group);//загружаем контакты уже были включены в эту группу ДО выполнения тестируемой операции
+    if (app.contacts().checkContactFromGroup(oldRelated, contact)) { // проверяем, может быть контакт уже в группе
+        app.contacts().refreshContactPresent();   // перейдём на страницу, на кототой можно выбрать контакт
+        app.contacts().removeContactInGroup(contact, group);    // удаляем контакт из группы
+        // чтобы сбросить фильтр по группе
+        app.groups().openGroupsPage();
+        app.contacts().refreshContactPresent();
+        oldRelated = app.hbm().getContactsInGroup(group);//загружаем контакты заново после удаления
+    }
+    oldRelated = app.contacts().cleanPhoto(oldRelated); // зачищаем информацию о фото
+
+    app.contacts().refreshContactPresent();   // перейдём на страницу, на кототой можно выбрать контакт
+    app.contacts().addContactInGroup(contact, group); // добавление контакта в группу через UI
+    var newRelated = app.hbm().getContactsInGroup(group);//загружаем новый список контактов ПОСЛЕ выполнения тестируемой операции
+    newRelated = app.contacts().cleanPhoto(newRelated); // зачищаем информацию о фото
+    Comparator<ContactData> compareById = (o1, o2) -> {
+        return Integer.compare(Integer.parseInt(o1.id()), Integer.parseInt(o2.id()));//сравниваем идентификаторы контактов, они не числа, а строки
+    };
+    newRelated.sort(compareById); // сортируем новый список
+    oldRelated.add(contact);    // добавим контакт в старый список
+    oldRelated.sort(compareById); // сортируем старый список
+
+    Assertions.assertEquals(oldRelated, newRelated);//проверяем, что новый и старый список совпадают
+
+}
 }
 
 
 
+//Для удаления контакта из группы нужно на главной странице приложения выбрать справа вверху группу, при этом будут показаны только входящие в эту группу контакты, после этого нужно отметить галочкой контакт и нажать кнопку "Remove from".

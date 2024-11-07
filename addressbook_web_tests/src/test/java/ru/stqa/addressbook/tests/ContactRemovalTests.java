@@ -11,7 +11,7 @@ public class ContactRemovalTests extends TestBase {//удаление конта
 
     @Test
     public void canRemoveContact() throws InterruptedException {
-        if (app.hbm().getContactCount()==0) {
+        if (app.hbm().getContactCount()==0) {//проверяем в БД
             app.hbm().createContact(new ContactData("", "middlename1", "lastname1", "nickname1", "+79232501606", "afa@gmail.com", "firstname1",""));//вызов метода создания контакта
         }
         //app.contacts().checkIsContact();       // проверим что есть хотя бы один контакт, если нет ни одного, то создадим

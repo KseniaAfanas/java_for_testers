@@ -20,7 +20,7 @@ public class ContactModificationTest extends TestBase {
         var rnd=new Random();//в старом списке выбрать какой-то обьект, который будет соответствовать удаляемой группе
         var index = rnd.nextInt(oldContacts.size());//случайным образом выбираем индекс какого-то элемента из списка old контактс
         var testData = new ContactData().WithFirstname("modified name");
-        app.contacts().refreshContactPresent();   // перейдём на страницу, на кототой можно удалить контакт, без предварительных проверок
+        app.contacts().refreshContactPresent();   // перейдём на страницу, на кототой можно удалить контакт
         app.contacts().modifyContact(oldContacts.get(index), testData);//метод, который модифицирует контакт
         var newContacts = app.hbm().getContactList();
         var expectedList = new ArrayList<>(oldContacts);//строим копию списка oldContacts
