@@ -12,6 +12,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static ru.stqa.addressbook.tests.TestBase.randomFile;
 
@@ -54,32 +57,22 @@ public class Generator {
         }
     }
 
+    private Object generateData(Supplier<Object> dataSupplier) {
+            return Stream.generate(dataSupplier).limit(count).collect(Collectors.toList());// коллектор выбирает все элементы из потока и формирует из них список
+    }
+
     private Object generateContacts() {
-        var result = new ArrayList<ContactData>();//создаем список объектов ContactData
-        for (int i = 0; i<count; i++) {//заполняем список в цикле
-                result.add(new ContactData()
-                        .WithFirstname(CommonFunctions.randomString(i*10))//создание контакта. В качестве наименование будет рандомное randomString длины i*10
-                        .WithMiddlename(CommonFunctions.randomString(i*10))
-                        .WithLastname(CommonFunctions.randomString(i*10))
-                        .WithNickname(CommonFunctions.randomString(i*10))
-                        .WithMobile(CommonFunctions.randomString(i*10))
-                        .WithEmail(CommonFunctions.randomString(i*10))
-                        .WithFoto(randomFile("src/test/resources/images")));
-            }
-        return result;
+        return generateData(() -> new ContactData()
+                .WithFirstname(CommonFunctions.randomString(10))//создание контакта. В качестве наименование будет рандомное randomString длины 10
+                .WithLastname(CommonFunctions.randomString(10)));
     }
 
     private Object generateGroups() {
-        var result = new ArrayList<GroupData>();//создаем список объектов GroupData
-        for (int i = 0; i<count; i++) {//заполняем список в цикле
-            result.add(new GroupData()
-                    .WithName(CommonFunctions.randomString(i*10))
-                    .WithHeader(CommonFunctions.randomString(i*10))
-                    .WithFooter(CommonFunctions.randomString(i*10)));//В список будет добавляться обьекты типа GroupData со случайно сгенерированным name,heder,footer
-        }
-        return result;
+        return generateData(() -> new GroupData()//параметром является функция, которая создает новый объект
+                .WithName(CommonFunctions.randomString(10))
+                .WithHeader(CommonFunctions.randomString(10))
+                .WithFooter(CommonFunctions.randomString(10)));//В список будет добавляться обьекты типа GroupData со случайно сгенерированным name,heder,footer длиной 10
     }
-
 
     private void save(Object data) throws IOException {//декларируем что мб исключение
         if ("json".equals(format)){
@@ -97,3 +90,31 @@ public class Generator {
         }
             }
 }
+
+/*
+    private Object generateContacts() {
+        var result = new ArrayList<ContactData>();//создаем список объектов ContactData
+        for (int i = 0; i<count; i++) {//заполняем список в цикле
+                result.add(new ContactData()
+                        .WithFirstname(CommonFunctions.randomString(i*10))//создание контакта. В качестве наименование будет рандомное randomString длины i*10
+                        .WithMiddlename(CommonFunctions.randomString(i*10))
+                        .WithLastname(CommonFunctions.randomString(i*10))
+                        .WithNickname(CommonFunctions.randomString(i*10))
+                        .WithMobile(CommonFunctions.randomString(i*10))
+                        .WithEmail(CommonFunctions.randomString(i*10))
+                        .WithFoto(randomFile("src/test/resources/images")));
+            }
+        return result;
+    }
+ private Object generateGroups() {
+        var result = new ArrayList<GroupData>();//создаем список объектов GroupData
+        for (int i = 0; i<count; i++) {//заполняем список в цикле
+            result.add(new GroupData()
+                    .WithName(CommonFunctions.randomString(i*10))
+                    .WithHeader(CommonFunctions.randomString(i*10))
+                    .WithFooter(CommonFunctions.randomString(i*10)));//В список будет добавляться обьекты типа GroupData со случайно сгенерированным name,heder,footer
+        }
+        return result;
+    }
+
+ */

@@ -15,6 +15,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public class GroupCreationTests extends TestBase{
 
@@ -34,12 +36,20 @@ public class GroupCreationTests extends TestBase{
         return result;
     }
 
-    public static List<GroupData> singleRandomGroup() {
+    /*public static List<GroupData> singleRandomGroup() {//провайдер тестовых данных, который возвращал список объектов типа GroupData
         return List.of(new GroupData()
                 .WithName(CommonFunctions.randomString(10))
                 .WithHeader(CommonFunctions.randomString(20))
                 .WithFooter(CommonFunctions.randomString(30)));
 
+    }*/
+
+    public static Stream<GroupData> singleRandomGroup() {
+        Supplier <GroupData> randomGroup = () -> new GroupData()//создаем бесконечный провайдер тестовых данных
+                .WithName(CommonFunctions.randomString(10))
+                .WithHeader(CommonFunctions.randomString(20))
+                .WithFooter(CommonFunctions.randomString(30));
+        return Stream.generate(randomGroup).limit(3);//в качестве результата возвращает новую случайную группу. Ограничиваем 3мя группами
     }
 
     @ParameterizedTest
