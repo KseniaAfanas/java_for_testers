@@ -1,5 +1,6 @@
 package ru.stqa.addressbook.manager;
 
+import org.openqa.selenium.WebElement;
 import ru.stqa.addressbook.model.GroupData;
 import org.openqa.selenium.By;
 
@@ -94,11 +95,17 @@ public class GroupHelper extends HelperBase {
         removeSelectedGroups();
         }
 
-    private void selectAllGroups() {
+    /*private void selectAllGroups() {
         var checkboxes = manager.driver.findElements(By.name("selected[]"));
         for (var checkbox: checkboxes){ //цикл который перебирает все элементы коллекции
            checkbox.click();
         }
+    }*/
+
+        private void selectAllGroups() {//переписали с использованием функционального стиля программирования
+            manager.driver
+                    .findElements(By.name("selected[]"))//найти элементы
+                    .forEach(WebElement::click);//цикл заменили на эту конструкцию: для каждого элемента списка checkboxes будет вызван метод click, описанный в классе WebElement
     }
 
     public List<GroupData> getList() {
