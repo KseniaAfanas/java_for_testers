@@ -8,7 +8,6 @@ import ru.stqa.addressbook.manager.hbm.GroupRecord;
 import ru.stqa.addressbook.model.ContactData;
 import ru.stqa.addressbook.model.GroupData;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,9 +62,28 @@ return records.stream().map(HibernateHelper::convert).collect(Collectors.toList(
     }
      */
 
-    private static ContactData convert(ContactRecord record) {
-        return new ContactData(""+record.id, record.middlename, record.lastname, record.nickname, record.mobile, record.email, record.firstname, record.photo);
+    //ТУТ МЕНЯТЬ ВСЁ!!!
+    private static ContactData convert(ContactRecord record) {//сделали в Лекция 7.5.
+        return new ContactData()
+                .WithId("" + record.id)
+                .WithMiddlename(record.middlename)
+                .WithLastname(record.lastname)
+                .WithNickname(record.nickname)
+                .WithAddress(record.address)
+                .WithEmail(record.email)
+                .WithFirstname(record.firstname)
+                .WithFoto(record.photo)
+                .WithHome(record.home)
+                .WithMobile(record.mobile)
+                .WithWork(record.work)
+                .WithSecondary(record.phone2);
     }
+
+    /*
+        private static ContactData convert(ContactRecord record) {//было так ДО Лекция 7.5. Метод обратных (обходных) проверок
+        return new ContactData(""+record.id, record.middlename, record.lastname, record.nickname, "", record.email, record.firstname, record.photo, "", record.mobile, "", "");
+    }
+     */
 
     private static ContactRecord convert(ContactData data) {
         var id=data.id();//чтобы не ломался parseInt если он пуст, то присваиваем 0

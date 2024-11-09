@@ -112,7 +112,7 @@ public class ContactHelper extends HelperBase{
 
         public void checkIsContact() { // если на странице нет контактов, то создадим
             if (!manager.isElementPresent(By.name("selected[]"))) {
-                createContact(new ContactData("", "middlenameGENA", "lastnameGENA", "nicknameGENA", "+79232501606", "GENA@gmail.com", "firstnameGENA","src/test/resources/images/avatar.png"));//вызов метода создания контакта
+                createContact(new ContactData("", "middlenameGENA", "lastnameGENA", "nicknameGENA", "", "GENA@gmail.com", "firstnameGENA", "src/test/resources/images/avatar.png", "", "+79232501606", "", ""));//вызов метода создания контакта
             }
         }
         private void selectContact(ContactData contact) {
@@ -197,4 +197,12 @@ public void create(ContactData contact, GroupData group) {//метод для в
         new Select(manager.driver.findElement(By.name("new_group"))).selectByValue(group.id());//находим на странице нужный элемент
     }
 
+    public String getPhones(ContactData contact) {//Получаем информацию о тел. для контакта с заданным идентификатором. Возвращает строку
+      return manager.driver.findElement(By.xpath( //возвращаем текст
+              String.format("//input[@id='%s']/../../td[6]",contact.id()))).getText();//сначала ищем чекбокс с заданным идентификатором. String.format тк нужно вызывать подстановку
+        //строка в которую передается подстановка "//input[@id='%s']"
+        //подъем на 2 уровня вверх, чтобы найти строку таблицы /../..
+        //находим в строке ячейку по заданному номеру ячейки (6я в таблице это телефон) td[6]
+
+    }
 }

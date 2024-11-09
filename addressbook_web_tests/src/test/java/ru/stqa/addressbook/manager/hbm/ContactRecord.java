@@ -23,6 +23,7 @@ public class ContactRecord {
     public String mobile;
 
     public String email;
+    public String phone2;//это которое secondary
 
     public String photo;
     public String company = new String ();//обязательное поле

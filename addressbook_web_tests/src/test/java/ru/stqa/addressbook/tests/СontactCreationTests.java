@@ -15,10 +15,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import ru.stqa.addressbook.manager.ApplicationManager;
-
-import static ru.stqa.addressbook.tests.TestBase.app;
-import static ru.stqa.addressbook.tests.TestBase.randomFile;
 
 public class СontactCreationTests extends TestBase {
 
@@ -59,7 +55,7 @@ public class СontactCreationTests extends TestBase {
 
    public static List<ContactData> negativeContactProvider() {//возвращает список объектов ContactData
         var result=new ArrayList<ContactData>(List.of(
-                new ContactData ("", "", "", "", "", "","firstname'", "")));//инициализируем создаваемый список соответствующими значениями
+                new ContactData ("", "", "", "", "", "", "firstname'", "", "", "", "", "")));//инициализируем создаваемый список соответствующими значениями
         return result;
     }
 
