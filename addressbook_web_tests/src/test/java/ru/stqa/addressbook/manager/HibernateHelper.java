@@ -10,6 +10,7 @@ import ru.stqa.addressbook.model.GroupData;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class HibernateHelper extends HelperBase{
     private SessionFactory sessionFactory;
@@ -25,12 +26,17 @@ public class HibernateHelper extends HelperBase{
                         .buildSessionFactory();
     }
     static List <GroupData> convertList (List<GroupRecord> records){//функция, которая преобразовывает список объектов одного типа в список объектов друго типа
+return records.stream().map(HibernateHelper::convert).collect(Collectors.toList());//делаем из списка поток, потом применяем к потоку трансформатор, потом результат собирает в список и возвращает обратно
+    }
+    /*
+        static List <GroupData> convertList (List<GroupRecord> records){//функция, которая преобразовывает список объектов одного типа в список объектов друго типа
         List<GroupData> result = new ArrayList<>();
         for (var record:records){
             result.add(convert(record));
         }
         return result;
     }
+     */
 
     private static GroupData convert(GroupRecord record) {
                 return new GroupData("" + record.id, record.name, record.header, record.footer);
@@ -45,12 +51,17 @@ public class HibernateHelper extends HelperBase{
     }
 
     static List <ContactData> convertContactList (List<ContactRecord> records){//функция, которая преобразовывает список объектов одного типа в список объектов друго типа
+        return records.stream().map(HibernateHelper::convert).collect(Collectors.toList());//делаем из списка поток, потом применяем к потоку трансформатор, потом результат собирает в список и возвращает обратно
+    }
+    /*
+        static List <ContactData> convertContactList (List<ContactRecord> records){//функция, которая преобразовывает список объектов одного типа в список объектов друго типа
         List<ContactData> result = new ArrayList<>();
         for (var record:records){
             result.add(convert(record));
         }
         return result;
     }
+     */
 
     private static ContactData convert(ContactRecord record) {
         return new ContactData(""+record.id, record.middlename, record.lastname, record.nickname, record.mobile, record.email, record.firstname, record.photo);

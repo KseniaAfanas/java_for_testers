@@ -6,6 +6,7 @@ import org.openqa.selenium.By;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
@@ -110,6 +111,21 @@ public class GroupHelper extends HelperBase {
 
     public List<GroupData> getList() {
         openGroupsPage();//открытие страницы со списком групп
+        var spans = manager.driver.findElements(By.cssSelector("span.group"));//получить со страницы список элементов, которые содержат информацию о группах
+        return spans.stream()//из списка строим поток. Взвращаем результат работы потока
+                .map(span ->{//применяем функцию трансформатор: на вход принимает элемент, на выходе - объект типа GroupData
+                    var name = span.getText();//извлекаем название группы из UI. Название группы это текст, поэтому его получаем с помощью getText
+                    var checkbox = span.findElement(By.name("selected[]")); //найдем чекбокс, который находится внутри элемента span
+                    var id= checkbox.getAttribute("value");//получаем идентификатор
+                    return new GroupData().WithId(id).WithName(name);// в список groups добавляем новый объект
+                })
+                .collect(Collectors.toList());//Получаем поток объектов типа GroupData и собираем в список
+            }
+}
+
+/*
+    public List<GroupData> getList() {
+        openGroupsPage();//открытие страницы со списком групп
         var groups = new ArrayList<GroupData>(); //цикл, который читает данные из ИБ, анализирует их и строит список. Создаем пустой список
         var spans = manager.driver.findElements(By.cssSelector("span.group"));//получить со страницы список элементов, которые содержат информацию о группах
         for (var span:spans){
@@ -120,5 +136,4 @@ var checkbox = span.findElement(By.name("selected[]")); //найдем чекб�
         }
         return groups;
     }
-}
-
+ */
