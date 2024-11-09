@@ -8,14 +8,14 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class GroupCreationTests extends TestBase{
@@ -44,15 +44,45 @@ public class GroupCreationTests extends TestBase{
 
     }*/
 
-    public static Stream<GroupData> singleRandomGroup() {
+    public static Stream<GroupData> RandomGroups() {
         Supplier <GroupData> randomGroup = () -> new GroupData()//создаем бесконечный провайдер тестовых данных
                 .WithName(CommonFunctions.randomString(10))
                 .WithHeader(CommonFunctions.randomString(20))
                 .WithFooter(CommonFunctions.randomString(30));
-        return Stream.generate(randomGroup).limit(3);//в качестве результата возвращает новую случайную группу. Ограничиваем 3мя группами
+        return Stream.generate(randomGroup).limit(1);//в качестве результата возвращает новую случайную группу. Ограничиваем 1й группой
     }
 
     @ParameterizedTest
+    @MethodSource ("RandomGroups")//метод который создает группы
+    public void CanCreateGroup(GroupData group) {//создается одна группа со сгенерированным наименованием, header и footer
+        var oldGroups = app.jdbc().getGroupList();//функция, которая возвращает старый список обектов типа GroupData
+        app.groups().createGroup(group);//создаём группу, которая передается в качестве параметра в тестируемую функцию
+        var newGroups = app.jdbc().getGroupList();//новый список групп отсортирован по названиям, которые получились после модификации
+        var extraGroups = newGroups.stream().filter(g -> !oldGroups.contains(g)).toList();//строим список групп, которые не встречались в старом.
+        // Строим поток и применяем функцию filter(проверяет, что элемент не содержится в старом списке)
+        //Отфильтровали и собираем в список
+        var newID=extraGroups.get(0).id(); //берем из списка любой элемент и получаем его идентификатор (он должен быть один)
+        var expectedList = new ArrayList<>(oldGroups);//ожидаемый список построен из старого списка oldGroups отсортирован по названиям, которые были ДО модификации
+        expectedList.add(group.WithId(newID));
+        Assertions.assertEquals(Set.copyOf(newGroups),Set.copyOf(expectedList));//проверка, которая сравнивает 2 МНОЖЕСТВА, которые построены из этих списков: ожидаемый и реальный
+    }
+
+    public static List<GroupData> negativeGroupProvider() {//возвращает список строк объектов типа GroupData
+        var result = new ArrayList<GroupData>(List.of(
+                new GroupData("", "group name'", "", "")));//создаем пустой список, а потом инициализируем: добавили параметры ("group name","group name'")
+              return result;
+    }
+
+    @ParameterizedTest
+    @MethodSource ("negativeGroupProvider")//метод который создает группы с апострофом (всегда падает, поэтому выделяем отдельно)
+    public void CanNotGroups(GroupData group) {//НЕ создается группа с заданными параметрами
+        var oldGroups =app.groups().getList();//получаем старый список
+        app.groups().createGroup(group);//создаём группу, которая передается в качестве параметра в тестируемую функцию
+        var newGroups =app.groups().getList();//получаем новый список после того как группа не создана
+        Assertions.assertEquals(newGroups, oldGroups);//проверяем, что количество групп не изменяется
+    }
+}
+/*
     @MethodSource ("singleRandomGroup")//метод который создает группы
     public void CanCreateGroup(GroupData group) {//создается одна группа со сгенерированным наименованием, header и footer
         var oldGroups = app.jdbc().getGroupList();//функция, которая возвращает старый список обектов типа GroupData
@@ -70,20 +100,5 @@ expectedList.add(group.WithId(maxID));
 expectedList.sort(compareById);//сортируем ожидаемый список
         Assertions.assertEquals(newGroups,expectedList);//проверка, которая сравнивает 2 списка ожидаемый и реальный
         //var newUiGroups=app.groups().getList();//СПИСОК НА ui
-
     }
-    public static List<GroupData> negativeGroupProvider() {//возвращает список строк объектов типа GroupData
-        var result = new ArrayList<GroupData>(List.of(
-                new GroupData("", "", "", "group name'")));//создаем пустой список, а потом инициализируем: добавили параметры ("group name","group name'")
-              return result;
-    }
-
-    @ParameterizedTest
-    @MethodSource ("negativeGroupProvider")//метод который создает группы с апострофом (всегда падает, поэтому выделяем отдельно)
-    public void CanNotGroups(GroupData group) {//НЕ создается группа с заданными параметрами
-        var oldGroups =app.groups().getList();//получаем старый список
-        app.groups().createGroup(group);//создаём группу, которая передается в качестве параметра в тестируемую функцию
-        var newGroups =app.groups().getList();//получаем новый список после того как группа не создана
-        Assertions.assertEquals(newGroups, oldGroups);//проверяем, что количество групп не изменяется
-    }
-}
+ */

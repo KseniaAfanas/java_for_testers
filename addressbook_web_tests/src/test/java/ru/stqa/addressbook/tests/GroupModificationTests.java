@@ -1,5 +1,6 @@
 package ru.stqa.addressbook.tests;
 
+import ru.stqa.addressbook.common.CommonFunctions;
 import ru.stqa.addressbook.model.GroupData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -7,15 +8,32 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Random;
+import java.util.Set;
 
 public class GroupModificationTests extends TestBase{
 
 @Test
-    void canModifyGroup() {
+void canModifyGroup() {
     if (app.hbm().getGroupCount()==0) {//проверяем наличие группы путем подсчета, если количество=0, то группы нет. Раньше тут был isGroupPresent (проверял наличие хотя бы одной группы)
-        app.hbm().createGroup(new GroupData("", "group header", "group footer", "group name"));
+        app.hbm().createGroup(new GroupData("","group name", "group header", "group footer"));
     }
-    var oldGroups = app.hbm().getGroupList();//функция, которая возвращает список обектов типа GroupData
+    var oldGroups = app.hbm().getGroupList();//функция, которая возвращает список обектов типа GroupData ДО модификации
+    var rnd=new Random();
+    var index = rnd.nextInt(oldGroups.size()); //в старом списке выбираем обьект, который будет соотвествовать удаляемой группе и для этого используем генератор случайных чисел
+    var testData = new GroupData().WithName(CommonFunctions.randomString(10));//задали рандомное имя
+    app.groups().modifyGroup(oldGroups.get(index), testData);//1й параметр - группа, которую хотим модифицировать, 2й параметр - данные, которыми будет заполняться форма при модификации
+    var newGroups = app.hbm().getGroupList();//новый список групп отсортирован по названиям, которые получились после модификации
+    var expectedList = new ArrayList<>(oldGroups);//ожидаемый список построен из старого списка oldGroups отсортирован по названиям, которые были ДО модификации
+    expectedList.set(index,testData.WithId(oldGroups.get(index).id()));//oldGroups.get(index) идентификатор той группы, которую модифицировали
+    Assertions.assertEquals(Set.copyOf(newGroups), Set.copyOf(expectedList));//проверка, которая сравнивает 2 множества (ожидаемое и реальное) БЕЗ УЧЕТА ПОРЯДКА, которые построены из этих списков
+}
+
+
+ /*   void canModifyGroup() {
+    if (app.hbm().getGroupCount()==0) {//проверяем наличие группы путем подсчета, если количество=0, то группы нет. Раньше тут был isGroupPresent (проверял наличие хотя бы одной группы)
+        app.hbm().createGroup(new GroupData("", "group name", "group header", "group footer"));
+    }
+    var oldGroups = app.hbm().getGroupList();//функция, которая возвращает список обектов типа GroupData ДО модификации
     var rnd=new Random();
     var index = rnd.nextInt(oldGroups.size()); //в старом списке выбираем обьект, который будет соотвествовать удаляемой группе и для этого используем генератор случайных чисел
     var testData = new GroupData().WithName("modified name");
@@ -28,7 +46,7 @@ public class GroupModificationTests extends TestBase{
     };
     newGroups.sort(compareById);//в метод сорт передаем компаратор, который сравнивает 2 объекта и отвечает какой больше, а какой меньше: 1й больше возвращает 1, 2й больше возвращает -1, если равны 0
     expectedList.sort(compareById);//сортируем 2 списка, которые упорядочены по возрастанию идентификатора
-    Assertions.assertEquals(newGroups,expectedList);//проверка, которая сравнивает 2 списка ожидаемый и реальный
-}
-}
+    Assertions.assertEquals(newGroups,expectedList);//проверка, которая сравнивает 2 списка ожидаемый и реальный с УЧЕТОМ ПОРЯДКА
+}*/
 
+}
