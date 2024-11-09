@@ -14,7 +14,7 @@ public class ContactRemovalTests extends TestBase {//удаление конта
     @Test
     public void canRemoveContact() throws InterruptedException {
         if (app.hbm().getContactCount()==0) {//проверяем в БД
-            app.hbm().createContact(new ContactData("", "middlename1", "lastname1", "nickname1", "", "afa@gmail.com", "firstname1", "", "", "+79232501606", "", ""));//вызов метода создания контакта
+            app.hbm().createContact(new ContactData("", "middlename1", "lastname1", "nickname1", "", "afa@gmail.com", "","" , "", "+79232501606", "", "", "firstname1", ""));//вызов метода создания контакта
         }
         //app.contacts().checkIsContact();       // проверим что есть хотя бы один контакт, если нет ни одного, то создадим
         //Thread.sleep(10000);
@@ -34,7 +34,7 @@ public class ContactRemovalTests extends TestBase {//удаление конта
     void canRemoveAllContactAtOnce() {//удаляем все контакты одновременно
         app.contacts().openContactPresent();   // перейдём на страницу, на кототой можно удалить контакт
         if (app.hbm().getContactCount()==0) {
-            app.hbm().createContact(new ContactData("", "middlenameGENA", "lastnameGENA", "nicknameGENA", "", "afa@gmail.com", "firstname1", "src/test/resources/images/avatar.png", "", "+79232501606", "", ""));//вызов метода создания контакта
+            app.hbm().createContact(new ContactData("", "middlenameGENA", "lastnameGENA", "nicknameGENA", "", "afa@gmail.com","","" , "", "+79232501606", "", "", "firstname1", "src/test/resources/images/avatar.png"));//вызов метода создания контакта
         }
         app.contacts().removeAllContacts();
         Assertions.assertEquals(0, app.hbm().getContactCount());//ожидаем 0 сравниваем с результатом выполнения метода по подсчету количества контактов

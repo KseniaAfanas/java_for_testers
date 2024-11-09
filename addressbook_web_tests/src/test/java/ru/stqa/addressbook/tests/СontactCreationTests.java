@@ -55,7 +55,7 @@ public class СontactCreationTests extends TestBase {
 
    public static List<ContactData> negativeContactProvider() {//возвращает список объектов ContactData
         var result=new ArrayList<ContactData>(List.of(
-                new ContactData ("", "", "", "", "", "", "firstname'", "", "", "", "", "")));//инициализируем создаваемый список соответствующими значениями
+                new ContactData ("", "", "", "", "", "", "","" , "", "", "", "", "firstname'", "")));//инициализируем создаваемый список соответствующими значениями
         return result;
     }
 

@@ -71,6 +71,8 @@ return records.stream().map(HibernateHelper::convert).collect(Collectors.toList(
                 .WithNickname(record.nickname)
                 .WithAddress(record.address)
                 .WithEmail(record.email)
+                .WithEmail2(record.email2)
+                .WithEmail3(record.email3)
                 .WithFirstname(record.firstname)
                 .WithFoto(record.photo)
                 .WithHome(record.home)

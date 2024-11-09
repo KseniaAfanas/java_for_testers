@@ -1,12 +1,15 @@
 package ru.stqa.addressbook.manager;
 
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import ru.stqa.addressbook.model.ContactData;
 import org.openqa.selenium.By;
 import ru.stqa.addressbook.model.GroupData;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ContactHelper extends HelperBase{
 
@@ -112,7 +115,7 @@ public class ContactHelper extends HelperBase{
 
         public void checkIsContact() { // если на странице нет контактов, то создадим
             if (!manager.isElementPresent(By.name("selected[]"))) {
-                createContact(new ContactData("", "middlenameGENA", "lastnameGENA", "nicknameGENA", "", "GENA@gmail.com", "firstnameGENA", "src/test/resources/images/avatar.png", "", "+79232501606", "", ""));//вызов метода создания контакта
+                createContact(new ContactData("", "middlenameGENA", "lastnameGENA", "nicknameGENA", "", "GENA@gmail.com","" ,"" , "", "+79232501606", "", "", "firstnameGENA", "src/test/resources/images/avatar.png"));//вызов метода создания контакта
             }
         }
         private void selectContact(ContactData contact) {
@@ -204,5 +207,17 @@ public void create(ContactData contact, GroupData group) {//метод для в
         //подъем на 2 уровня вверх, чтобы найти строку таблицы /../..
         //находим в строке ячейку по заданному номеру ячейки (6я в таблице это телефон) td[6]
 
+    }
+
+    public Map<String, String> getPhones() {//метод, который возвращает информацию обо всех тел для всех контактов. Идентификатор строка и тел строка
+        var result= new HashMap<String, String>();//сохраняем соответствие между телефонами и идентификатором
+        List<WebElement> rows = manager.driver.findElements(By.name("entry"));//ищем элементы, которые соответствуют строкам таблицы и сохраняем в переменную rows(строки таблицы).
+        // Все нужные строки имеют атрибут name="entry"
+    for (WebElement row:rows) {
+        var id =row.findElement(By.tagName("input")).getAttribute("id");//для каждой строки ищем идентификатор контакта
+        var phones = row.findElements(By.tagName("td")).get(5).getText();// ищем все ячейки в этой таблице. Берем ячейку с индексом 5 (те с номером 6) и получаем её текст
+        result.put(id,phones);//помещаем в переменную соответствие между идентификатором и телефонами
+    }
+    return result;
     }
 }

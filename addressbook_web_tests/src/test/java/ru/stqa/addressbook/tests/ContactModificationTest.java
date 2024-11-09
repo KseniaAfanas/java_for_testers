@@ -14,7 +14,7 @@ public class ContactModificationTest extends TestBase {
 //        app.contacts().openContactPresent();   // перейдём на страницу, на кототой можно удалить контакт
 //        app.contacts().checkIsContact();//чтобы модифицировать, необходимо, чтобы хотя бы один контакт существовал
         if (app.hbm().getContactCount()==0) {
-            app.hbm().createContact(new ContactData("", "middlename1", "lastname1", "nickname1", "", "afa@gmail.com", "firstname1", "", "", "+79232501606", "", ""));//вызов метода создания контакта
+            app.hbm().createContact(new ContactData("", "middlename1", "lastname1", "nickname1", "", "afa@gmail.com", "","" , "", "+79232501606", "", "", "firstname1", ""));//вызов метода создания контакта
         }
         var oldContacts = app.hbm().getContactList();
         var rnd=new Random();//в старом списке выбрать какой-то обьект, который будет соответствовать удаляемой группе
