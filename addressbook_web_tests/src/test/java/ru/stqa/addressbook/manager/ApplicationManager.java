@@ -18,6 +18,7 @@ public class ApplicationManager {/* методы для управления т�
     private JdbcHelper jdbc;
     private HibernateHelper hbm;
 
+
     public void init(String browser, Properties properties) {
         this.properties=properties;
         if (driver == null) {
