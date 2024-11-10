@@ -35,7 +35,7 @@ public class ContactInfoTests extends TestBase{
         Assertions.assertEquals(expected,phones);// сравниваем 2 словаря: ожидаемый с тем, что вернулось из пользовательского интерфейса
     }
 
-    @Test
+    //@Test
     void testPhonesOneContact(){//проверяем телефоны для одного контакта
     var contacts = app.hbm().getContactList();//получаем список контактов
      //добавить проверку и обеспечение предусловий, тк список контактов может быть пустым
@@ -47,5 +47,35 @@ public class ContactInfoTests extends TestBase{
              .collect(Collectors.joining("\n"));//склеиваем вместе, в качестве разделителя переход строки \n
         Assertions.assertEquals(expected,phones);
             }
-}
+    //Test
+    void testAddressOneContact(){//проверяем адреса для одного контакта
+        var contacts = app.hbm().getContactList();//получаем список контактов
+        //добавить проверку и обеспечение предусловий, тк список контактов может быть пустым
+        var contact = contacts.get(0);//выбираем 1й контакт в списке, который извлечен из БД (на UI не факт что первый)
+        var address = app.contacts().getAddress(contact);//получаем информацию о телефонах для контакта с заданным идентификатором. Передаем весь контакт (contact), хотя важен только id
+//необходимо взять контакт из БД и из его тел склеить строку. Пустые тел при склеивании пропустить
+        var expected = contact.address();  //делаем из тел. поток. ОЖИДАЕМОЕ значение
+        Assertions.assertEquals(expected,address);
+    }
+    //@Test
+    void testEmailOneContact(){//проверяем email для одного контакта
+        var contacts = app.hbm().getContactList();//получаем список контактов
+        //добавить проверку и обеспечение предусловий, тк список контактов может быть пустым
+        var contact = contacts.get(0);//выбираем 1й контакт в списке, который извлечен из БД (на UI не факт что первый)
+        var email = app.contacts().getEmail(contact);//получаем информацию о телефонах для контакта с заданным идентификатором. Передаем весь контакт (contact), хотя важен только id
+//необходимо взять контакт из БД и из его тел склеить строку. Пустые тел при склеивании пропустить
+        var expected = Stream.of(contact.email(),contact.email2(),contact.email3())   //делаем из тел. поток. ОЖИДАЕМОЕ значение
+                .filter(s->s !=null && !"".equals(s))//фильтр, который пропускает все пустые строчки. Оставляем НЕ пустые телефоны
+                .collect(Collectors.joining("\n"));//склеиваем вместе, в качестве разделителя переход строки \n
+        Assertions.assertEquals(expected,email);
+    }
 
+    @Test
+    void testContact() {
+        for (int i = 0; i < 3; i++) {
+            if(i == 0) testPhonesOneContact();
+            if(i == 1) testAddressOneContact();
+            if(i == 2) testEmailOneContact();
+        }
+    }
+}

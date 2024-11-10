@@ -220,4 +220,14 @@ public void create(ContactData contact, GroupData group) {//метод для в
     }
     return result;
     }
+
+    public String getAddress(ContactData contact) {//Получаем информацию об адресе для контакта с заданным идентификатором. Возвращает строку
+        return manager.driver.findElement(By.xpath( //возвращаем текст
+                String.format("//input[@id='%s']/../../td[4]",contact.id()))).getText();
+    }
+
+    public String getEmail(ContactData contact) {//Получаем информацию о Email для контакта с заданным идентификатором. Возвращает строку
+        return manager.driver.findElement(By.xpath( //возвращаем текст
+                String.format("//input[@id='%s']/../../td[5]",contact.id()))).getText();
+    }
 }
