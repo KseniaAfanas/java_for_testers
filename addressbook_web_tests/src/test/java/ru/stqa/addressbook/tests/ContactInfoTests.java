@@ -2,6 +2,8 @@ package ru.stqa.addressbook.tests;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import ru.stqa.addressbook.common.CommonFunctions;
+import ru.stqa.addressbook.model.ContactData;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -38,7 +40,6 @@ public class ContactInfoTests extends TestBase{
     //@Test
     void testPhonesOneContact(){//проверяем телефоны для одного контакта
     var contacts = app.hbm().getContactList();//получаем список контактов
-     //добавить проверку и обеспечение предусловий, тк список контактов может быть пустым
      var contact = contacts.get(0);//выбираем 1й контакт в списке, который извлечен из БД (на UI не факт что первый)
      var phones = app.contacts().getPhones(contact);//получаем информацию о телефонах для контакта с заданным идентификатором. Передаем весь контакт (contact), хотя важен только id
 //необходимо взять контакт из БД и из его тел склеить строку. Пустые тел при склеивании пропустить
@@ -50,7 +51,6 @@ public class ContactInfoTests extends TestBase{
     //Test
     void testAddressOneContact(){//проверяем адреса для одного контакта
         var contacts = app.hbm().getContactList();//получаем список контактов
-        //добавить проверку и обеспечение предусловий, тк список контактов может быть пустым
         var contact = contacts.get(0);//выбираем 1й контакт в списке, который извлечен из БД (на UI не факт что первый)
         var address = app.contacts().getAddress(contact);//получаем информацию о телефонах для контакта с заданным идентификатором. Передаем весь контакт (contact), хотя важен только id
 //необходимо взять контакт из БД и из его тел склеить строку. Пустые тел при склеивании пропустить
@@ -60,7 +60,6 @@ public class ContactInfoTests extends TestBase{
     //@Test
     void testEmailOneContact(){//проверяем email для одного контакта
         var contacts = app.hbm().getContactList();//получаем список контактов
-        //добавить проверку и обеспечение предусловий, тк список контактов может быть пустым
         var contact = contacts.get(0);//выбираем 1й контакт в списке, который извлечен из БД (на UI не факт что первый)
         var email = app.contacts().getEmail(contact);//получаем информацию о телефонах для контакта с заданным идентификатором. Передаем весь контакт (contact), хотя важен только id
 //необходимо взять контакт из БД и из его тел склеить строку. Пустые тел при склеивании пропустить
@@ -72,6 +71,21 @@ public class ContactInfoTests extends TestBase{
 
     @Test
     void testContact() {
+        //прверка, что список контактов может быть пустым
+        if (app.hbm().getContactCount()==0) { //проверяем в БД, если контакта нет, то
+            var contact = new ContactData()//создаем нового обьекта через UI
+                    .WithLastname(CommonFunctions.randomString(10))
+                    .WithFirstname(CommonFunctions.randomString(10))
+                    .WithAddress(CommonFunctions.randomString(10))
+                    .WithHome(CommonFunctions.randomString(10))
+                    .WithMobile(CommonFunctions.randomString(10))
+                    .WithWork(CommonFunctions.randomString(10))
+                    .WithSecondary(CommonFunctions.randomString(10))
+                    .WithEmail(CommonFunctions.randomString(10))
+                    .WithEmail2(CommonFunctions.randomString(10))
+                    .WithEmail3(CommonFunctions.randomString(10));
+            app.contacts().create(contact);//создане контакта через UI
+        }
         for (int i = 0; i < 3; i++) {
             if(i == 0) testPhonesOneContact();
             if(i == 1) testAddressOneContact();
