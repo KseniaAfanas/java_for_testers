@@ -14,6 +14,7 @@ public class ApplicationManager {
     private Properties properties;//хранятся настройки окружения
     private SessionHelper sessionHelper;//ссылка на помощника
     private HttpSessionHelper httpSessionHelper;
+    private JamesCliHelper jamesCliHelper;
 
 
     public void init(String browser, Properties properties) {//убрали инициализацию драйвера, оставили только инфу о том, какой браузер хотим запустить
@@ -50,6 +51,14 @@ public SessionHelper session() {//метод, который выполняет 
             httpSessionHelper = new HttpSessionHelper(this);//менеджер передает ссылку на себя
         }
         return httpSessionHelper;//возвращаем либо созданный объект либо тот, который был создан ранее
+
+    }
+
+    public JamesCliHelper jamesCli() {
+        if (jamesCliHelper==null){//ленивая инициализация
+            jamesCliHelper = new JamesCliHelper(this);//менеджер передает ссылку на себя
+        }
+        return jamesCliHelper;//возвращаем либо созданный объект либо тот, который был создан ранее
 
     }
 
