@@ -13,8 +13,10 @@ public class ApplicationManager {
     private String String;//сохраняется информация о браузере
     private Properties properties;//хранятся настройки окружения
     private SessionHelper sessionHelper;//ссылка на помощника
+    private HttpSessionHelper httpSessionHelper;
 
-public void init(String browser, Properties properties) {//убрали инициализацию драйвера, оставили только инфу о том, какой браузер хотим запустить
+
+    public void init(String browser, Properties properties) {//убрали инициализацию драйвера, оставили только инфу о том, какой браузер хотим запустить
         this.String = browser;
         this.properties=properties;
             }
@@ -42,4 +44,17 @@ public SessionHelper session() {//метод, который выполняет 
     }
     return sessionHelper;//возвращаем либо созданный объект либо тот, который был создан ранее
 }
+
+    public HttpSessionHelper htpp() {
+        if (httpSessionHelper==null){//ленивая инициализация
+            httpSessionHelper = new HttpSessionHelper(this);//менеджер передает ссылку на себя
+        }
+        return httpSessionHelper;//возвращаем либо созданный объект либо тот, который был создан ранее
+
+    }
+
+    public String property(String name){//вспомогательный метод для обращения к файлу с настройками
+        return properties.getProperty(name);
+    }
+
 }
