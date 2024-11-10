@@ -13,8 +13,7 @@ public record ContactData(String id,
                           String work,
                           String secondary,
                           String firstname,
-                          String foto
-) {//record-класс для моделирования данных
+                          String foto) {//record-класс для моделирования данных
     public ContactData() {
         this ("", "", "", "", "", "", "", "", "", "", "", "", "", "");
     }

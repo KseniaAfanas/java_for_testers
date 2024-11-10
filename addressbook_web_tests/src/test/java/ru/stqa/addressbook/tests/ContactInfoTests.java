@@ -55,6 +55,7 @@ public class ContactInfoTests extends TestBase{
         var address = app.contacts().getAddress(contact);//получаем информацию о телефонах для контакта с заданным идентификатором. Передаем весь контакт (contact), хотя важен только id
 //необходимо взять контакт из БД и из его тел склеить строку. Пустые тел при склеивании пропустить
         var expected = contact.address();  //делаем из тел. поток. ОЖИДАЕМОЕ значение
+        expected = expected.replace("\r", ""); // удираем символ возврата каретки
         Assertions.assertEquals(expected,address);
     }
     //@Test
@@ -80,7 +81,6 @@ public class ContactInfoTests extends TestBase{
                     .WithHome(CommonFunctions.randomString(10))
                     .WithMobile(CommonFunctions.randomString(10))
                     .WithWork(CommonFunctions.randomString(10))
-                    .WithSecondary(CommonFunctions.randomString(10))
                     .WithEmail(CommonFunctions.randomString(10))
                     .WithEmail2(CommonFunctions.randomString(10))
                     .WithEmail3(CommonFunctions.randomString(10));
