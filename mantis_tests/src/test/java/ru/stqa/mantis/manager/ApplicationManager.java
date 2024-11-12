@@ -15,6 +15,7 @@ public class ApplicationManager {
     private SessionHelper sessionHelper;//ссылка на помощника
     private HttpSessionHelper httpSessionHelper;
     private JamesCliHelper jamesCliHelper;
+    private MailHelper mailHelper;
 
 
     public void init(String browser, Properties properties) {//убрали инициализацию драйвера, оставили только инфу о том, какой браузер хотим запустить
@@ -62,8 +63,18 @@ public SessionHelper session() {//метод, который выполняет 
 
     }
 
+    public MailHelper mail() {//ленивая инициализация
+            if (mailHelper == null) {//ленивая инициализация
+                mailHelper = new MailHelper(this);//менеджер передает ссылку на себя
+            }
+        return mailHelper;//возвращаем либо созданный объект либо тот, который был создан ранее
+    }
+
     public String property(String name){//вспомогательный метод для обращения к файлу с настройками
         return properties.getProperty(name);
     }
+    }
 
-}
+
+
+
