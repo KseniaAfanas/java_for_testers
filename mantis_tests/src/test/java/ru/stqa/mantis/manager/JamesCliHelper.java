@@ -1,7 +1,10 @@
 package ru.stqa.mantis.manager;
 
+import org.junit.jupiter.api.Assertions;
+import org.openqa.selenium.By;
 import org.openqa.selenium.io.CircularOutputStream;
 import org.openqa.selenium.os.CommandLine;
+import ru.stqa.mantis.model.MailMessage;
 
 public class JamesCliHelper extends HelperBase{
     public JamesCliHelper (ApplicationManager manager) {
@@ -20,5 +23,40 @@ public void addUser(String email, String password){ //метод, который
     System.out.println(out);//печатаем на консоль то, что перехватили
 
 }
+public void openPage (String email, String password) {//открываем браузер и заполняем форму создания и отправляем (в браузере, создать класс помощник) Письмо уходит
+    openManage(); //открыть страницу manage_overview_page
+    openUsers();//перейти на вкладку Users
+    createNewAccount();//открыть форму создания нового контакта
+    fillContactForm();//заполнить форму создания контакта
+    submitContact();//сохранение данных по контакту
 
 }
+
+    private void submitContact() {
+        click(By.linkText("Create User"));
+    }
+
+    private void fillContactForm() {
+            type(By.name("E-mail"), "%s@localhost");
+            type(By.name("Username"),"username");
+
+    }
+
+    private void createNewAccount() {
+        click(By.linkText("Create New Account"));
+    }
+
+    private void openUsers() {
+        click(By.linkText("User"));
+        }
+
+    private void openManage() {
+        click(By.name("Manage"));
+    }
+
+    public void finalPage(String email, String password) {
+
+    }
+}
+
+
