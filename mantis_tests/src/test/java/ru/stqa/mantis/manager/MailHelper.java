@@ -20,10 +20,7 @@ public class MailHelper extends HelperBase{
         var start = System.currentTimeMillis();//запоминаем время выполнения начала метода
         while (System.currentTimeMillis()<start+duration.toMillis()){//пока тек время < (старт + Duration) выполняем действия
         try {
-            var session = Session.getInstance(new Properties());//создать сессию для работы с почтовым сервером
-            Store store = session.getStore("pop3");;//получаем доступ к хранилищу почты
-            store.connect("localhost",username,password);//устанавливаем соединение
-            var inbox = store.getFolder("INBOX");//обращаемся к почтовому ящику
+            var inbox = getInbox(username, password);//обращаемся к почтовому серверу
             inbox.open(Folder.READ_ONLY);//открываем ящик только на чтение
             var messages = inbox.getMessages();//читаем почту. Возвращается массив, необходимо преобразовать в список
             var result = Arrays.stream(messages)//запоминаем результат
@@ -39,8 +36,8 @@ public class MailHelper extends HelperBase{
                         }
                     })
                     .toList();//превращаем массив в поток
-             inbox.close();//закрываем почту
-             store.close();//закрываем хранилище
+            inbox.close();//закрываем почту
+            inbox.getStore().close();//закрываем хранилище
             if (result.size()>0){//если список не пуст
                 return result;//возвращаем результат
             }
@@ -55,4 +52,36 @@ public class MailHelper extends HelperBase{
     }
         throw new RuntimeException("No mail"); //если не получили почту, те цикл закончился, тогда выбрасываем исключение
     }
+
+    private Folder getInbox(String username, String password) {
+        try {
+            var session = Session.getInstance(new Properties());//создать сессию для работы с почтовым сервером
+            Store store = session.getStore("pop3");
+            //получаем доступ к хранилищу почты
+            store.connect("localhost", username, password);//устанавливаем соединение
+            var inbox = store.getFolder("INBOX");//обращаемся к почтовому ящику
+            return inbox;
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+    }
+}
+
+public void drain(String username, String password){//удалить все письма из почтового ящика
+     try {
+        var inbox = getInbox(username, password);//передаем (username, password) чтобы очистить ящик только у заданного пользователя
+        inbox.open(Folder.READ_WRITE);//открываем ящик на чтение и запись
+        Arrays.stream(inbox.getMessages()).forEach(m-> {
+            try {
+                m.setFlag(Flags.Flag.DELETED,true);
+            } catch (MessagingException e) {
+                throw new RuntimeException(e);
+            }
+        });//помечаем каждое письмо как удаленное
+        inbox.close();//закрываем inbox
+        inbox.getStore().close();//закрываем хранилище
+    } catch (MessagingException e) {
+        throw new RuntimeException(e);
+    }
+    }
+
 }
