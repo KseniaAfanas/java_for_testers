@@ -11,6 +11,7 @@ import ru.stqa.mantis.model.MailMessage;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class UserRegistrationTests extends TestBase{
@@ -25,19 +26,22 @@ public class UserRegistrationTests extends TestBase{
     var email = String.format("%s@localhost",username);
     app.jamesCli().addUser(email,"password");   //создать пользователя (адрес) на почтовом сервере (JamesCliHelper)
 
-     app.jamesCli().login("administrator","root");//проверяем что можно залогинится с "administrator"/"root"
-    Thread.sleep(1000);
-    //Assertions.assertTrue(app.htpp().isLoggedIn());
+    app.jamesCli().login("administrator","root");//проверяем что можно залогинится с "administrator"/"root"
 
     app.jamesCli().openPage(email,"password"); //открываем браузер и заполняем форму создания и отправляем (в браузере, создать класс помощник) Письмо уходит
-                var messages = app.mail().receive("%s@localhost","password", Duration.ofSeconds(10));//получаем (ждём) почту (MailHelper). Письмо только одно. Адрес только что созданный вот этот "%s@localhost"
+    var messages = app.mail().receive("%s@localhost","password", Duration.ofSeconds(10));//получаем (ждём) почту (MailHelper). Письмо только одно. Адрес только что созданный вот этот "%s@localhost"
 
     //извлекаем ссылку из письма с помощью canExtractUrl()
-
+        var text = messages.get(0).content();//берем текст первого письма
+        var pattern = Pattern.compile("http://\\S*");//шаблон для поиска ссылки в письме
+        var matcher = pattern.matcher(text);//применение шаблона к тексту
+        if (matcher.find()) {
+            var url = text.substring(matcher.start(),matcher.end());
+            System.out.println(url);
+        }
     app.jamesCli().finalPage(email,"password"); //проходим по ссылке и завершаем регистрацию пользователя (в браузере, создать класс помощник)
+
     //проверяем, что пользователь может залогиниться (HttpSessionHelper)
-
-
 
 }
 }

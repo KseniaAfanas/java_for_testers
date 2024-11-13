@@ -23,8 +23,8 @@ public void addUser(String email, String password){ //метод, который
     System.out.println(out);//печатаем на консоль то, что перехватили
 
 }
-public void openPage (String email, String password) {//открываем браузер и заполняем форму создания и отправляем (в браузере, создать класс помощник) Письмо уходит
-    openManage(); //открыть страницу manage_overview_page
+public void openPage (String email, String password) throws InterruptedException {//открываем браузер и заполняем форму создания и отправляем (в браузере, создать класс помощник) Письмо уходит
+    openManage(); //тыкнуть на Manage
     openUsers();//перейти на вкладку Users
     createNewAccount();//открыть форму создания нового контакта
     fillContactForm();//заполнить форму создания контакта
@@ -32,30 +32,28 @@ public void openPage (String email, String password) {//открываем бр�
 
 }
 
-    private void submitContact() {
-        click(By.linkText("Create User"));
+    private void openManage() {//тыкнуть на Manage
+        click(By.linkText("Manage"));
     }
 
+    private void openUsers() {//перейти на вкладку Users
+        click(By.cssSelector("[href='/mantisbt-2.26.3/manage_user_page.php']"));
+        //click(By.linkText("manage_user_page"));
+    }
     private void fillContactForm() {
-            type(By.name("E-mail"), "%s@localhost");
-            type(By.name("Username"),"username");
-
+            type(By.id ("email-field"), "%s@localhost");
+            type(By.id ("user-username"),"username");
     }
-
+    private void submitContact() {
+        click(By.xpath("(//input[@type=\'submit\'])"));
+    }
     private void createNewAccount() {
-        click(By.linkText("Create New Account"));
-    }
-
-    private void openUsers() {
-        click(By.linkText("User"));
-        }
-
-    private void openManage() {
-        click(By.cssSelector("span.menu-text"));
+        click(By.cssSelector("[href='manage_user_create_page.php']"));
+        //click(By.linkText("Create New Account"));//href="manage_user_create_page.php"
     }
 
     public void finalPage(String email, String password) {
-
+//
     }
 
     public void login(String administrator, String root) {
