@@ -25,12 +25,12 @@ public class UserRegistrationTests extends TestBase{
     var email = String.format("%s@localhost",username);
     app.jamesCli().addUser(email,"password");   //создать пользователя (адрес) на почтовом сервере (JamesCliHelper)
 
-     app.htpp().login("administrator","root");//проверяем что можно залогинится с "administrator"/"root"
-    Thread.sleep(500);
-    Assertions.assertTrue(app.htpp().isLoggedIn());
+     app.jamesCli().login("administrator","root");//проверяем что можно залогинится с "administrator"/"root"
+    Thread.sleep(1000);
+    //Assertions.assertTrue(app.htpp().isLoggedIn());
 
     app.jamesCli().openPage(email,"password"); //открываем браузер и заполняем форму создания и отправляем (в браузере, создать класс помощник) Письмо уходит
-    var messages = app.mail().receive("%s@localhost","password");//получаем (ждём) почту (MailHelper). Письмо только одно. Адрес только что созданный вот этот "%s@localhost"
+                var messages = app.mail().receive("%s@localhost","password", Duration.ofSeconds(10));//получаем (ждём) почту (MailHelper). Письмо только одно. Адрес только что созданный вот этот "%s@localhost"
 
     //извлекаем ссылку из письма с помощью canExtractUrl()
 

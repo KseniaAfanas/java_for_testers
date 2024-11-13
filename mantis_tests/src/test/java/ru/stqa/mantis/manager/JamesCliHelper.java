@@ -51,10 +51,19 @@ public void openPage (String email, String password) {//открываем бр�
         }
 
     private void openManage() {
-        click(By.name("Manage"));
+        click(By.cssSelector("span.menu-text"));
     }
 
     public void finalPage(String email, String password) {
+
+    }
+
+    public void login(String administrator, String root) {
+        type(By.name("username"), administrator);
+        click(By.xpath("//input[@value=\'Login\']"));
+        type(By.id("password"),root);
+        click(By.xpath("//input[@value=\'Login\']"));
+
 
     }
 }
