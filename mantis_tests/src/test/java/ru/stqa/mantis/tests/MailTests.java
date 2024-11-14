@@ -22,7 +22,7 @@ public class MailTests extends TestBase {
 
     @Test
     void canExtractUrl(){//извлечь ссылку из текса письма
-        var messages = app.mail().receive("user66@localhost","password", Duration.ofSeconds(10));//получаем почту
+        var messages = app.mail().receive("user6@localhost","password", Duration.ofSeconds(10));//получаем почту
         var text = messages.get(0).content();//берем текст первого письма
         var pattern = Pattern.compile("http://\\S*");//шаблон для поиска ссылки в письме
         var matcher = pattern.matcher(text);//применение шаблона к тексту

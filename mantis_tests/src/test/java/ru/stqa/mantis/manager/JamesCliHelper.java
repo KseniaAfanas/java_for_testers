@@ -23,11 +23,11 @@ public void addUser(String email, String password){ //метод, который
     System.out.println(out);//печатаем на консоль то, что перехватили
 
 }
-public void openPage (String email, String password) throws InterruptedException {//открываем браузер и заполняем форму создания и отправляем (в браузере, создать класс помощник) Письмо уходит
+public void openPage (String email, String user, String password) throws InterruptedException {//открываем браузер и заполняем форму создания и отправляем (в браузере, создать класс помощник) Письмо уходит
     openManage(); //тыкнуть на Manage
     openUsers();//перейти на вкладку Users
     createNewAccount();//открыть форму создания нового контакта
-    fillContactForm();//заполнить форму создания контакта
+    fillContactForm(email, user);//заполнить форму создания контакта
     submitContact();//сохранение данных по контакту
 
 }
@@ -40,9 +40,9 @@ public void openPage (String email, String password) throws InterruptedException
         click(By.cssSelector("[href='/mantisbt-2.26.3/manage_user_page.php']"));
         //click(By.linkText("manage_user_page"));
     }
-    private void fillContactForm() {
-            type(By.id ("email-field"), "%s@localhost");
-            type(By.id ("user-username"),"username");
+    private void fillContactForm(String email, String user) {
+            type(By.id ("email-field"), email);
+            type(By.id ("user-username"),user);
     }
     private void submitContact() {
         click(By.xpath("(//input[@type=\'submit\'])"));
@@ -52,9 +52,6 @@ public void openPage (String email, String password) throws InterruptedException
         //click(By.linkText("Create New Account"));//href="manage_user_create_page.php"
     }
 
-    public void finalPage(String email, String password) {
-//
-    }
 
     public void login(String administrator, String root) {
         type(By.name("username"), administrator);

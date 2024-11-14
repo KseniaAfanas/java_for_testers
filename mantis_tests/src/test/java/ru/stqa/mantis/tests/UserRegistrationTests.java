@@ -5,12 +5,19 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import ru.stqa.mantis.common.CommonFunctions;
+import ru.stqa.mantis.manager.ApplicationManager;
 import ru.stqa.mantis.model.MailMessage;
 
+import java.io.FileReader;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -28,20 +35,30 @@ public class UserRegistrationTests extends TestBase{
 
     app.jamesCli().login("administrator","root");//проверяем что можно залогинится с "administrator"/"root"
 
-    app.jamesCli().openPage(email,"password"); //открываем браузер и заполняем форму создания и отправляем (в браузере, создать класс помощник) Письмо уходит
-    var messages = app.mail().receive("%s@localhost","password", Duration.ofSeconds(10));//получаем (ждём) почту (MailHelper). Письмо только одно. Адрес только что созданный вот этот "%s@localhost"
+    app.jamesCli().openPage(email, username, "password"); //открываем браузер и заполняем форму создания и отправляем (в браузере, создать класс помощник) Письмо уходит
+    var messages = app.mail().receive(email,"password", Duration.ofSeconds(10));//получаем (ждём) почту (MailHelper). Письмо только одно. Адрес только что созданный вот этот "%s@localhost"
 
     //извлекаем ссылку из письма с помощью canExtractUrl()
-        var text = messages.get(0).content();//берем текст первого письма
-        var pattern = Pattern.compile("http://\\S*");//шаблон для поиска ссылки в письме
-        var matcher = pattern.matcher(text);//применение шаблона к тексту
-        if (matcher.find()) {
-            var url = text.substring(matcher.start(),matcher.end());
-            System.out.println(url);
-        }
-    app.jamesCli().finalPage(email,"password"); //проходим по ссылке и завершаем регистрацию пользователя (в браузере, создать класс помощник)
+    var text = messages.get(0).content();//берем текст первого письма
+    var pattern = Pattern.compile("http://\\S*");//шаблон для поиска ссылки в письме
+    var matcher = pattern.matcher(text);//применение шаблона к тексту
+    if (matcher.find()) {
+        var url = text.substring(matcher.start(),matcher.end());
+//проходим по ссылке и завершаем регистрацию пользователя (в браузере). Проверяем, что пользователь может залогиниться (HttpSessionHelper)
+        WebDriver driver = new FirefoxDriver();
+        driver.get(url);
+        driver.manage().window().setSize(new Dimension(1920, 1040));
+        driver.findElement(By.id ("realname")).sendKeys(username);
+        driver.findElement(By.id ("password")).sendKeys("password");
+        driver.findElement(By.id ("password-confirm")).sendKeys("password");
+        driver.findElement((By.cssSelector("span.bigger-110"))).click();
 
-    //проверяем, что пользователь может залогиниться (HttpSessionHelper)
+        app.htpp().loginUser(username, "password");
+        Thread.sleep(500);
+
+        Assertions.assertTrue(app.htpp().isLoggedUserIn(username));
+
+    }
 
 }
 }
