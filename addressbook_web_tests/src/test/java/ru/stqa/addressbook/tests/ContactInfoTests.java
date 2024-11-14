@@ -54,7 +54,7 @@ public class ContactInfoTests extends TestBase{
         var contact = contacts.get(0);//выбираем 1й контакт в списке, который извлечен из БД (на UI не факт что первый)
         var address = app.contacts().getAddress(contact);//получаем информацию о телефонах для контакта с заданным идентификатором. Передаем весь контакт (contact), хотя важен только id
 //необходимо взять контакт из БД и из его тел склеить строку. Пустые тел при склеивании пропустить
-        var expected = contact.address();  //делаем из тел. поток. ОЖИДАЕМОЕ значение
+        var expected = contact.address();  //ОЖИДАЕМОЕ значение
         expected = expected.replace("\r", ""); // удираем символ возврата каретки
         Assertions.assertEquals(expected,address);
     }
@@ -64,10 +64,26 @@ public class ContactInfoTests extends TestBase{
         var contact = contacts.get(0);//выбираем 1й контакт в списке, который извлечен из БД (на UI не факт что первый)
         var email = app.contacts().getEmail(contact);//получаем информацию о телефонах для контакта с заданным идентификатором. Передаем весь контакт (contact), хотя важен только id
 //необходимо взять контакт из БД и из его тел склеить строку. Пустые тел при склеивании пропустить
-        var expected = Stream.of(contact.email(),contact.email2(),contact.email3())   //делаем из тел. поток. ОЖИДАЕМОЕ значение
+        var expected = Stream.of(contact.email(),contact.email2(),contact.email3())   //делаем из email() поток. ОЖИДАЕМОЕ значение
                 .filter(s->s !=null && !"".equals(s))//фильтр, который пропускает все пустые строчки. Оставляем НЕ пустые телефоны
                 .collect(Collectors.joining("\n"));//склеиваем вместе, в качестве разделителя переход строки \n
         Assertions.assertEquals(expected,email);
+    }
+
+    @Test
+    void test3in1Contact(){//проверяем телефоны/адреса/email для одного контакта
+        var contacts = app.hbm().getContactList();//получаем список контактов
+        var contact = contacts.get(0);//выбираем 1й контакт в списке, который извлечен из БД (на UI не факт что первый)
+        var phones = app.contacts().getPhones(contact);//получаем информацию о телефонах для контакта с заданным идентификатором.
+        var address = app.contacts().getAddress(contact);//получаем информацию о телефонах для контакта с заданным идентификатором.
+        var email = app.contacts().getEmail(contact);//получаем информацию о телефонах для контакта с заданным идентификатором. Передаем весь контакт (contact), хотя важен только id
+        var expected = Stream.of(contact.home(),contact.mobile(),contact.work(),contact.secondary(),contact.email(),contact.email2(),contact.email3(),contact.address().replace("\r", ""))   //делаем из 3in1 поток. ОЖИДАЕМОЕ значение
+                .filter(s->s !=null && !"".equals(s))//фильтр, который пропускает все пустые строчки. Оставляем НЕ пустые
+                .collect(Collectors.joining("\n"));//склеиваем вместе, в качестве разделителя переход строки \n
+        var actual = Stream.of(phones, email, address)   //делаем из 3in1 поток. ОЖИДАЕМОЕ значение
+                .filter(s->s !=null && !"".equals(s))//фильтр, который пропускает все пустые строчки. Оставляем НЕ пустые
+                .collect(Collectors.joining("\n"));//склеиваем вместе, в качестве разделителя переход строки \n
+        Assertions.assertEquals(expected,actual);
     }
 
     @Test
