@@ -53,7 +53,7 @@ public class UserRegistrationTests extends TestBase{
         driver.findElement(By.id ("password-confirm")).sendKeys("password");
         driver.findElement((By.cssSelector("span.bigger-110"))).click();
 
-        app.htpp().loginUser(username, "password");
+        app.htpp().login(username, "password");
         Thread.sleep(500);
 
         Assertions.assertTrue(app.htpp().isLoggedUserIn(username));
