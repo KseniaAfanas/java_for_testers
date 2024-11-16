@@ -42,6 +42,9 @@ public class UserRegistrationTests extends TestBase{
     var text = messages.get(0).content();//берем текст первого письма
     var pattern = Pattern.compile("http://\\S*");//шаблон для поиска ссылки в письме
     var matcher = pattern.matcher(text);//применение шаблона к тексту
+
+    Assertions.assertTrue(matcher.find());
+
     if (matcher.find()) {
         var url = text.substring(matcher.start(),matcher.end());
 //проходим по ссылке и завершаем регистрацию пользователя (в браузере). Проверяем, что пользователь может залогиниться (HttpSessionHelper)
@@ -57,8 +60,8 @@ public class UserRegistrationTests extends TestBase{
         Thread.sleep(500);
 
         Assertions.assertTrue(app.htpp().isLoggedUserIn(username));
+  }
 
-    }
 
 }
 }
