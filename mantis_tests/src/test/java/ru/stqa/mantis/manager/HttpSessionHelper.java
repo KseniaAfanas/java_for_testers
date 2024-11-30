@@ -12,7 +12,7 @@ public class HttpSessionHelper extends HelperBase{//работает на уро
         client = new OkHttpClient.Builder().cookieJar(new JavaNetCookieJar(new CookieManager())).build();//проинициализировали клиента. Устанавливаем кукименеджера
     }
 
-    public void login(String username, String password) {
+    public void login(String username, String password) {//отправляем форму с вебстраницы
         RequestBody formBody = new FormBody.Builder()
                 .add("username",username)//имя пользователя
                 .add("password",password)//пароль

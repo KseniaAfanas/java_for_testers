@@ -16,6 +16,7 @@ public class ApplicationManager {
     private HttpSessionHelper httpSessionHelper;
     private JamesCliHelper jamesCliHelper;
     private MailHelper mailHelper;
+    private JamesApiHelper jamesApiHelper;
 
 
     public void init(String browser, Properties properties) {//убрали инициализацию драйвера, оставили только инфу о том, какой браузер хотим запустить
@@ -60,6 +61,14 @@ public SessionHelper session() {//метод, который выполняет 
             jamesCliHelper = new JamesCliHelper(this);//менеджер передает ссылку на себя
         }
         return jamesCliHelper;//возвращаем либо созданный объект либо тот, который был создан ранее
+
+    }
+
+    public JamesApiHelper jamesApi() {
+        if (jamesApiHelper==null){//ленивая инициализация
+            jamesApiHelper = new JamesCliHelper(this);//менеджер передает ссылку на себя
+        }
+        return jamesApiHelper;//возвращаем либо созданный объект либо тот, который был создан ранее
 
     }
 
