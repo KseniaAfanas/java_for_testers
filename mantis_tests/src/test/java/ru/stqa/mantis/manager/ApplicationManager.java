@@ -6,6 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
+import java.time.Duration;
 import java.util.Properties;
 
 public class ApplicationManager {
@@ -66,7 +67,7 @@ public SessionHelper session() {//метод, который выполняет 
 
     public JamesApiHelper jamesApi() {
         if (jamesApiHelper==null){//ленивая инициализация
-            jamesApiHelper = new JamesCliHelper(this);//менеджер передает ссылку на себя
+            jamesApiHelper = new JamesApiHelper(this);//менеджер передает ссылку на себя
         }
         return jamesApiHelper;//возвращаем либо созданный объект либо тот, который был создан ранее
 
@@ -82,7 +83,8 @@ public SessionHelper session() {//метод, который выполняет 
     public String property(String name){//вспомогательный метод для обращения к файлу с настройками
         return properties.getProperty(name);
     }
-    }
+
+}
 
 
 
