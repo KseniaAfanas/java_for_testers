@@ -1,5 +1,6 @@
 package ru.stqa.addressbook.manager;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.WebElement;
 import ru.stqa.addressbook.model.GroupData;
 import org.openqa.selenium.By;
@@ -25,7 +26,7 @@ public class GroupHelper extends HelperBase {
         openGroupsPage();
         return manager.isElementPresent(By.name("selected[]"));// удалили, тк нигде не используется
     }*/
-
+    @Step
     public void createGroup(GroupData group) {
         openGroupsPage();
         initGroupCreation();
@@ -33,13 +34,14 @@ public class GroupHelper extends HelperBase {
         submitGroupCreation();
         returnToGroupsPage();
     }
-
+    @Step
     public void removeGroup(GroupData group) {//в качесте параметра принимает объект типа GroupData
         openGroupsPage();
         selectGroup(group);
         removeSelectedGroups();
         returnToGroupsPage();
     }
+    @Step
     public void modifyGroup(GroupData group, GroupData modifiedGroup) {//метод для модификации группы
         openGroupsPage();
         selectGroup(group);//выбрать группу (отметить галочкой)
@@ -49,47 +51,47 @@ public class GroupHelper extends HelperBase {
         returnToGroupsPage();
     }
 
-
+    @Step
     private void submitGroupCreation() {
         click(By.name("submit"));
     }
-
+    @Step
     private void initGroupCreation() {
         click(By.name("new"));
     }
-
+    @Step
     private void removeSelectedGroups() {
         click(By.name("delete"));
     }
-
+    @Step
     private void returnToGroupsPage() {
         click(By.linkText("group page"));
     }
-
+    @Step
     private void submitGroupModification() {
         click(By.name("update"));
 
     }
-
+    @Step
     private void fillGroupForm(GroupData group) {
         type(By.name("group_name"), group.name());
         type(By.name("group_header"), group.header());
         type(By.name("group_footer"), group.footer());
     }
-
+    @Step
     private void initGroupModification() {
         click(By.name("edit"));
     }
-
+    @Step
     private void selectGroup(GroupData group) {//параметр-объект типа GroupData, который содержит идентификатор нужной группы
         click(By.cssSelector(String.format("input[value='%s']",group.id())));
     }
-
+    @Step
     public int getCount() {
         openGroupsPage();//открытие страницы со списком групп
         return manager.driver.findElements(By.name("selected[]")).size(); //метод, который находит много элеметов. Возвращает список. size()- возвращает размер списка
     }
-
+    @Step
     public void removeAllGroups() {//метод для удаления всех групп
         openGroupsPage();//открытие страницы со списком групп
         selectAllGroups();//вспомогательный метод для выбора всех групп
@@ -102,13 +104,13 @@ public class GroupHelper extends HelperBase {
            checkbox.click();
         }
     }*/
-
+    @Step
         private void selectAllGroups() {//переписали с использованием функционального стиля программирования
             manager.driver
                     .findElements(By.name("selected[]"))//найти элементы
                     .forEach(WebElement::click);//цикл заменили на эту конструкцию: для каждого элемента списка checkboxes будет вызван метод click, описанный в классе WebElement
     }
-
+    @Step
     public List<GroupData> getList() {
         openGroupsPage();//открытие страницы со списком групп
         var spans = manager.driver.findElements(By.cssSelector("span.group"));//получить со страницы список элементов, которые содержат информацию о группах
