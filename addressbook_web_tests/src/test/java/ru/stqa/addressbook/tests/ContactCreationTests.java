@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class СontactCreationTests extends TestBase {
+public class ContactCreationTests extends TestBase {
 
     public static List<ContactData> contactProvider() throws IOException {//возвращает список объектов ContactData
         var result=new ArrayList<ContactData>();//инициализируем создаваемый список соответствующими значениями
