@@ -25,7 +25,8 @@ public class UserCreationTests extends TestBase {
         void canCreateUser(String user) throws InterruptedException {
                 var email = String.format("%s@localhost",user);
                 var password = "password";
-                app.jamesApi().addUser(email,password);// jamesApi альтернативный помошник, который работает через удаленный программный интерфейс. Создает нового пользователя
+                app.jamesApi().addUser(email,password);// jamesApi альтернативный помошник, который работает через удаленный программный интерфейс.
+                // Создает нового пользователя с заданным именем
                 app.jamesCli().login("administrator","root");//проверяем что можно залогинится с "administrator"/"root"
                 app.jamesCli().openPage(email, user, password); //открываем браузер и заполняем форму создания и отправляем (в браузере, создать класс помощник) Письмо уходит
 
@@ -43,6 +44,6 @@ public class UserCreationTests extends TestBase {
 
                 app.htpp().login(user, password);
                 Thread.sleep(500);
-                Assertions.assertTrue(app.htpp().isLoggedIn());
+                Assertions.assertTrue(app.htpp().isLoggedUserIn(user));
         }
 }
