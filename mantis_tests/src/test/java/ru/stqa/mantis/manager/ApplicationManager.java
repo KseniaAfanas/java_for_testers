@@ -18,6 +18,8 @@ public class ApplicationManager {
     private JamesCliHelper jamesCliHelper;
     private MailHelper mailHelper;
     private JamesApiHelper jamesApiHelper;
+    private UserHelper userHelper;
+    private DeveloperMailHelper developerMailHelper;
 
 
     public void init(String browser, Properties properties) {//убрали инициализацию драйвера, оставили только инфу о том, какой браузер хотим запустить
@@ -78,6 +80,21 @@ public SessionHelper session() {//метод, который выполняет 
                 mailHelper = new MailHelper(this);//менеджер передает ссылку на себя
             }
         return mailHelper;//возвращаем либо созданный объект либо тот, который был создан ранее
+    }
+
+    public UserHelper user() {//ленивая инициализация
+        if (userHelper == null) {//ленивая инициализация
+            userHelper = new UserHelper(this);//менеджер передает ссылку на себя
+        }
+        return userHelper;//возвращаем либо созданный объект либо тот, который был создан ранее
+    }
+
+
+    public DeveloperMailHelper developerMail() {//ленивая инициализация
+        if (developerMailHelper == null) {//ленивая инициализация
+            developerMailHelper = new DeveloperMailHelper(this);//менеджер передает ссылку на себя
+        }
+        return developerMailHelper;//возвращаем либо созданный объект либо тот, который был создан ранее
     }
 
     public String property(String name){//вспомогательный метод для обращения к файлу с настройками

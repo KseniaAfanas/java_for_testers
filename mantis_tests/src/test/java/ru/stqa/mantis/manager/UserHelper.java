@@ -6,6 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 public class UserHelper {
+
     public static void checkUser(String url, String user, String password) {
         WebDriver driver = new FirefoxDriver();
         driver.get(url);
