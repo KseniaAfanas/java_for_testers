@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class UserCreationTests extends TestBase {
-
+        DeveloperMailUser user;
         @Test
         void canCreateUser() {//имя пользователя получаем внутри сценария
                 var password = "password";
@@ -40,12 +40,12 @@ public class UserCreationTests extends TestBase {
 //                app.htpp().login(user, password);
 //                Thread.sleep(500);
 //                Assertions.assertTrue(app.htpp().isLoggedUserIn(user));
-//        }
-                @AfterEach
-                void deleteMailUser() {
+       }
+       @AfterEach
+       void deleteMailUser() { //удаление пользователя
                 app.developerMail().deleteUser(user);
-                }
-        }
+       }
+
 }
 /*
        public class UserCreationTests extends TestBase {
