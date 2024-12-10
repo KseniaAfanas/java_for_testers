@@ -22,24 +22,23 @@ import java.util.stream.Stream;
 public class UserCreationTests extends TestBase {
         DeveloperMailUser user;
         @Test
-        void canCreateUser() {//имя пользователя получаем внутри сценария
+        void canCreateUser() throws InterruptedException {//имя пользователя получаем внутри сценария
                 var password = "password";
                 user = app.developerMail().addUser();//обращаемся в сервису developerMail и добавляем пользователя.
                 // В качестве ответа получаем информацию о пользователе
-                var email = String.format("%s@developerMail.com",user.name());
+                var email = String.format("%s@developermail.com",user.name());
+                //app.jamesCli().login("administrator","root");//проверяем что можно залогинится с "administrator"/"root"
+                //app.jamesCli().openPage(email, user, password); //открываем браузер и заполняем форму создания и отправляем (в браузере, создать класс помощник) Письмо уходит
+                app.user().startCreation(user.name(),email);
+                var message = app.developerMail().receive(user, Duration.ofSeconds(10));
+                var url = CommonFunctions.extractUrl(message);
 
-//                app.jamesCli().login("administrator","root");//проверяем что можно залогинится с "administrator"/"root"
-//                app.jamesCli().openPage(email, user, password); //открываем браузер и заполняем форму создания и отправляем (в браузере, создать класс помощник) Письмо уходит
-//
-//                var messages = app.mail().receive(email, password, Duration.ofSeconds(10));
-//                var url = CommonFunctions.extractUrl(messages.get(0).content());
-//
-//                //app.user().finishCreation(url,password);
-//                UserHelper.checkUser(url, user, password);
-//
-//                app.htpp().login(user, password);
-//                Thread.sleep(500);
-//                Assertions.assertTrue(app.htpp().isLoggedUserIn(user));
+                app.user().finishCreation(url, user.name(), password);
+                //UserHelper.checkUser(url, user, password);
+
+                app.htpp().login(user.name(), password);
+                Thread.sleep(500);
+                Assertions.assertTrue(app.htpp().isLoggedUserIn(user.name()));
        }
        @AfterEach
        void deleteMailUser() { //удаление пользователя

@@ -82,12 +82,12 @@ public SessionHelper session() {//метод, который выполняет 
         return mailHelper;//возвращаем либо созданный объект либо тот, который был создан ранее
     }
 
-//    public UserHelper user() {//ленивая инициализация
-//        if (userHelper == null) {//ленивая инициализация
-//            userHelper = new UserHelper(this);//менеджер передает ссылку на себя
-//        }
-//        return userHelper;//возвращаем либо созданный объект либо тот, который был создан ранее
-//    }
+    public UserHelper user() {//ленивая инициализация
+        if (userHelper == null) {//ленивая инициализация
+            userHelper = new UserHelper(this);//менеджер передает ссылку на себя
+        }
+        return userHelper;//возвращаем либо созданный объект либо тот, который был создан ранее
+    }
 
 
     public DeveloperMailHelper developerMail() {//ленивая инициализация

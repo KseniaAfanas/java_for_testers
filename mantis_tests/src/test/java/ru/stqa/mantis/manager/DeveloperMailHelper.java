@@ -1,12 +1,19 @@
 package ru.stqa.mantis.manager;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeUtility;
 import okhttp3.*;
 import ru.stqa.mantis.manager.developermail.AddUserResponse;
+import ru.stqa.mantis.manager.developermail.GetIdsResponse;
+import ru.stqa.mantis.manager.developermail.GetMessageResponse;
 import ru.stqa.mantis.model.DeveloperMailUser;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.CookieManager;
+import java.time.Duration;
 
 public class DeveloperMailHelper extends HelperBase {
     public static final MediaType JSON = MediaType.get("application/json");
@@ -50,4 +57,50 @@ public class DeveloperMailHelper extends HelperBase {
             throw new RuntimeException(e);
         }
     }
+
+    public String receive(DeveloperMailUser user, Duration duration) {
+        var start = System.currentTimeMillis();//запоминаем время выполнения начала метода
+        while (System.currentTimeMillis()<start+duration.toMillis()){//пока тек время < (старт + Duration) выполняем действия
+            //проверка почты
+            try {
+                var text1= get(String.format("https://www.developermail.com/api/v1/mailbox/%s",user.name()),user.token());
+                GetIdsResponse response1 = new ObjectMapper().readValue(text1, GetIdsResponse.class);
+                if (!response1.success()){
+                    throw new RuntimeException(response1.errors().toString());
+                }
+                if (response1.result().size()>0){
+                    var text2= get(String.format("https://www.developermail.com/api/v1/mailbox/%s/messages/%s",user.name(),response1.result().get(0)),user.token());
+                    var response2 = new ObjectMapper().readValue(text2, GetMessageResponse.class);//text - источник; AddUserResponse.class - тип данных
+                    if (!response2.success()){
+                        throw new RuntimeException(response2.errors().toString());
+                    }
+                    return new String(MimeUtility.decode(
+                            new ByteArrayInputStream(response2.result().getBytes()),
+                            "quoted-printable").readAllBytes()); //текст письма
+                }
+            } catch (MessagingException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        throw new RuntimeException("No mail"); //если не получили почту, те цикл закончился, тогда выбрасываем исключение
+    }
+
+    String get(String url, String token) {
+        Request request = new Request.Builder()
+                .url(url)
+                .header("X-MailboxToken",token)
+                .build();
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) throw new RuntimeException("Unexpected code " + response);//проверка того что ответ был успешным
+            return response.body().string();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
