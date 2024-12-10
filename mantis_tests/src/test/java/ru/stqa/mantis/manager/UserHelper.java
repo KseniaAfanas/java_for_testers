@@ -12,7 +12,7 @@ public class UserHelper extends HelperBase{//работает через пол�
 
     public void startCreation(String user,String email) {
         if (!manager.session().isLoggedIn()){
-            manager.session().login(manager.property("web.usernаme"), manager.property("web.password"));
+            manager.session().login(manager.property("web.username"), manager.property("web.password"));
         }
         manager.driver().get(String.format("%s/manage_user_create_page.php",manager.property("web.baseUrl")));
         type(By.name("username"),user);
