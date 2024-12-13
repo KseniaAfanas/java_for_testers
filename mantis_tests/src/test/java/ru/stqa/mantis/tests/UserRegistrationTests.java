@@ -47,15 +47,8 @@ public class UserRegistrationTests extends TestBase{
 
     if (matcher.find()) {
         var url = text.substring(matcher.start(),matcher.end());
-//проходим по ссылке и завершаем регистрацию пользователя (в браузере). Проверяем, что пользователь может залогиниться (HttpSessionHelper)
-        WebDriver driver = new FirefoxDriver();
-        driver.get(url);
-        driver.manage().window().setSize(new Dimension(1920, 1040));
-        driver.findElement(By.id ("realname")).sendKeys(username);
-        driver.findElement(By.id ("password")).sendKeys("password");
-        driver.findElement(By.id ("password-confirm")).sendKeys("password");
-        driver.findElement((By.cssSelector("span.bigger-110"))).click();
-
+        //проходим по ссылке и завершаем регистрацию пользователя (в браузере). Проверяем, что пользователь может залогиниться (HttpSessionHelper)
+        app.calcDriver(url, username);
         app.htpp().login(username, "password");
         Thread.sleep(500);
 

@@ -101,6 +101,15 @@ public SessionHelper session() {//метод, который выполняет 
         return properties.getProperty(name);
     }
 
+    public void calcDriver (String url, String username) {
+        WebDriver driver = new FirefoxDriver();
+        driver.get(url);
+        driver.manage().window().setSize(new Dimension(1920, 1040));
+        driver.findElement(By.id("realname")).sendKeys(username);
+        driver.findElement(By.id("password")).sendKeys("password");
+        driver.findElement(By.id("password-confirm")).sendKeys("password");
+        driver.findElement((By.cssSelector("span.bigger-110"))).click();
+    }
 }
 
 
